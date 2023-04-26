@@ -1,5 +1,4 @@
-﻿using MyGrum.ViewModels;
-using MyGrum.Views;
+﻿using MyGrum.Views;
 using System;
 using System.Collections.Generic;
 using Xamarin.Forms;
@@ -11,9 +10,6 @@ namespace MyGrum
         public AppShell()
         {
             InitializeComponent();
-            Routing.RegisterRoute(nameof(ItemDetailPage), typeof(ItemDetailPage));
-            Routing.RegisterRoute(nameof(NewItemPage), typeof(NewItemPage));
         }
-
     }
 }
