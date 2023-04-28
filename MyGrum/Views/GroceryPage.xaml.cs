@@ -14,8 +14,17 @@ namespace MyGrum.Views
     {
         public GroceryPage()
         {
-            Label label = new Label { Text = "Tere hommikust!" };
+            Title = "Продукты";
+            Label label = new Label { Text = "Доброе утро!" };
             Content = label;
         }
     }
 }
+//Неделя на выполнение - до 06.05
+//План действий:
+//  1. Создание базы данных
+//  2. Заполнение базы данных
+//  3. Написание кода
+//  4. Тестировка
+//  5. Оформление
+//  6. Тестировка

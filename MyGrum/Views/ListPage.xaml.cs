@@ -14,7 +14,8 @@ namespace MyGrum.Views
     {
         public ListPage()
         {
-            Label label = new Label { Text = "Tere päevast!" };
+            Title = "Список";
+            Label label = new Label { Text = "Добрый день!" };
             Content = label;
         }
     }

@@ -14,7 +14,8 @@ namespace MyGrum.Views
     {
         public RecipesPage()
         {
-            Label label = new Label { Text = "Tere õhtust!" };
+            Title = "Рецепты";
+            Label label = new Label { Text = "Добрый вечер!" };
             Content = label;
         }
     }
