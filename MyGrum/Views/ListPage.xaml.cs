@@ -16,7 +16,8 @@ namespace MyGrum.Views
         {
             Title = "Список";
             Label label = new Label { Text = "Добрый день!" };
-            Content = label;
+            StackLayout st = new StackLayout { Children = { label } };
+            Content = st;
         }
     }
 }
