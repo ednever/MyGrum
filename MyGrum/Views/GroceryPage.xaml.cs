@@ -12,11 +12,28 @@ namespace MyGrum.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class GroceryPage : ContentPage
     {
+        int[] ints = new int[6] { 0, 1, 2, 3, 4, 5 };
         public GroceryPage()
         {
             Title = "Продукты";
-            Label label = new Label { Text = "Доброе утро!" };
-            StackLayout st = new StackLayout { Children = {label}};
+            StackLayout st = new StackLayout();
+            for (int i = 0; i < ints.Length / 3; i++) //ряды
+            {
+                StackLayout st1 = new StackLayout { Orientation = StackOrientation.Horizontal};
+                for (int j = 0; j < 3; j++) //колонки
+                {
+                    Label label = new Label { Text = ints[j].ToString() };
+                    st1.Children.Add(label);
+                }
+                st.Children.Add(st1);
+            }
+            
+            
+
+            
+
+
+            
             Content = st;
         }
     }

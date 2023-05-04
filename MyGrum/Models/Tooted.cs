@@ -19,7 +19,8 @@ namespace MyGrum.Models
         [MaxLength(15)]
         public string Pilt { get; set; }
 
-        //[ForeignKey(typeof(Kategooriad))]
+        //[ForeignKey(typeof(Kategooriad))]        
         public int KategooriaID { get; set; }
     }
 }
+//Перейти на .NET Framework 4 и выше
