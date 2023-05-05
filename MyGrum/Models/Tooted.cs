@@ -23,4 +23,4 @@ namespace MyGrum.Models
         public int KategooriaID { get; set; }
     }
 }
-//Перейти на .NET Framework 4 и выше
+//Решить проблему с ForeignKey
