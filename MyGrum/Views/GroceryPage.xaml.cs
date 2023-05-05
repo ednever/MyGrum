@@ -18,19 +18,19 @@ namespace MyGrum.Views
         {
             Title = "Категории";
             StackLayout st = new StackLayout();
-            for (int i = 0; i < 4; i+=3)
+            for (int i = 0; i < 4; i += 3)
             {
-                StackLayout st1 = new StackLayout 
-                { 
-                    Orientation = StackOrientation.Horizontal, 
-                    VerticalOptions = LayoutOptions.Center, 
+                StackLayout st1 = new StackLayout
+                {
+                    Orientation = StackOrientation.Horizontal,
+                    VerticalOptions = LayoutOptions.Center,
                     HorizontalOptions = LayoutOptions.Center,
                     Margin = new Thickness(0, 10, 0, 0)
                 };
                 for (int j = 0; j < 3; j++)
                 {
                     Label label = new Label { Text = ints[i + j].ToString(), FontSize = 20, Margin = 30 };
-                    
+
                     Frame frame = new Frame
                     {
                         BorderColor = Color.Black,
@@ -46,19 +46,28 @@ namespace MyGrum.Views
 
                 st.Children.Add(st1);
             }
-
             Content = st;
         }
         public GroceryPage(int[] ints)
         {
             this.ints = ints;
             Title = "Товары";
+
+            //Content = st;
         }
 
-        async void Tap_Tapped(object sender, EventArgs e)
+        public async void Tap_Tapped(object sender, EventArgs e)
         {
             await Navigation.PushAsync(new GroceryPage(ints));
         }
+    }
+    public class Vizualization
+    {
+        public Vizualization()
+        {
+            
+        }
+
     }
 }
 //Неделя на выполнение - до 06.05
@@ -73,4 +82,5 @@ namespace MyGrum.Views
 /*
  * Сделать расстояние между боксами одинаковое
  * Заменить цифры на картинки
+ * Переделать страницу в общий класс
  */
