@@ -31,14 +31,15 @@ namespace MyGrum.Views
 
 
         List<Kategooriad> kategooriad = new List<Kategooriad>();
-        int[][] matrix = new int[3][];
+        
 
         public void Test()
         {
-            matrix[0] = new int[] { 1, 2, 3 };
-            matrix[1] = new int[] { 1, 2, 3 };
-            matrix[2] = new int[] { 1, 2, 3 };
-            //matrix[3] = new int[] { 1, 2, 3 };
+            int[][] matrix = new int[3][];
+            for (int i = 0; i < matrix.Length; i++)
+            {
+                matrix[i] = new int[] { 1, 2, 3 };
+            }
 
 
 
