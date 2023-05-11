@@ -16,48 +16,81 @@ namespace MyGrum.Views
     {
         int[] ints = { 1, 2, 3, 4, 5, 6 };
 
-
-
-
-
-
         string[] fileNames = { "Kategooriad.txt", "Tooted.txt" };
         string folderPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-
-
-
-
-
-
-
-        List<Kategooriad> kategooriad = new List<Kategooriad>();
         
-
-        public void Test()
+        List<Kategooriad> kategooriad = new List<Kategooriad>();
+        Grid grid;
+        
+        public GroceryPage()
         {
-            int[][] matrix = new int[3][];
-            for (int i = 0; i < matrix.Length; i++)
+            Title = "Категории";
+
+            TapGestureRecognizer tap = new TapGestureRecognizer();
+            tap.Tapped += Tap_Tapped;
+
+            FileOutput();
+
+            grid = new Grid
             {
-                matrix[i] = new int[] { 1, 2, 3 };
+                RowDefinitions = new RowDefinitionCollection { new RowDefinition() },
+                ColumnDefinitions = new ColumnDefinitionCollection{ new ColumnDefinition(), new ColumnDefinition(), new ColumnDefinition() },
+                Margin = 10
+            };
+
+            for (int i = 0; i < kategooriad.Count; i++)
+            {
+                int row = i / 3;
+                int column = i % 3;
+
+                Label label = new Label
+                {
+                    Text = kategooriad[i].Kategooria,
+                    VerticalOptions = LayoutOptions.Center,
+                    HorizontalOptions = LayoutOptions.Center,
+                    FontSize = 20
+                };
+
+                Frame frame = new Frame
+                {
+                    BorderColor = Color.Black,
+                    BackgroundColor = Color.Transparent,
+                    CornerRadius = 15,
+                    Content = label
+                };
+
+                frame.GestureRecognizers.Add(tap);
+
+                grid.Children.Add(frame, column, row);
             }
+            
+            Content = grid;
+        }
+        public GroceryPage(int[] ints)
+        {
+            this.ints = ints;
+            Title = "Товары";
 
+            //Content = st;
+        }
+        public async void Tap_Tapped(object sender, EventArgs e)
+        {
+            Frame frm = (Frame)sender;
+            if (grid.Children.Last() == frm)
+            {
+                await Navigation.PushAsync(new ListPage());
+            }
+            else
+            {
+                await Navigation.PushAsync(new GroceryPage(ints));
+            }            
+        }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+        public void FileOutput()
+        {
             //Создание файлов
-            File.WriteAllText(Path.Combine(folderPath, fileNames[0]), "1,Овощи,vegetables.png"); //Категория
-            File.WriteAllText(Path.Combine(folderPath, fileNames[1]), "1,Картофель,potato.png,1"); //Товар
+            //File.WriteAllText(Path.Combine(folderPath, fileNames[0]), "1,Овощи,vegetables.png"); //Категория
+            //File.WriteAllText(Path.Combine(folderPath, fileNames[1]), "1,Картофель,potato.png,1"); //Товар
 
             if (String.IsNullOrEmpty(fileNames[0])) return;
             if (fileNames[0] != null)
@@ -70,86 +103,15 @@ namespace MyGrum.Views
                     kategooriad.Add(kategooria);
                 }
             }
-        }
-
-
-
-
-
-
-
-        public GroceryPage()
-        {
-            Title = "Категории";
-
-            Test();
-
-            StackLayout st = new StackLayout();
-            for (int i = 0; i < kategooriad.Count; i++)
+            kategooriad.Add(new Kategooriad( 0, "+", "test" ));
+            for (int i = 0; i < 13; i++)
             {
-                StackLayout st1 = new StackLayout
-                {
-                    Orientation = StackOrientation.Horizontal,
-                    VerticalOptions = LayoutOptions.Center,
-                    HorizontalOptions = LayoutOptions.Center,
-                    Margin = new Thickness(0, 10, 0, 0)
-                };
-                Label label = new Label { Text = kategooriad[i].Kategooria, FontSize = 20, Margin = 30 };
-                Frame frame = new Frame
-                {
-                    BorderColor = Color.Black,
-                    BackgroundColor = Color.Transparent,
-                    CornerRadius = 15,
-                    Content = label
-                };
-
-                TapGestureRecognizer tap = new TapGestureRecognizer();
-                tap.Tapped += Tap_Tapped;
-
-                Label label2 = new Label { Text = "+", FontSize = 20, Margin = 30 };
-
-                Frame frame2 = new Frame
-                {
-                    BorderColor = Color.Black,
-                    BackgroundColor = Color.Transparent,
-                    CornerRadius = 15,
-                    Content = label2
-                };
-
-                frame.GestureRecognizers.Add(tap);
-                st1.Children.Add(frame);
-
-                frame2.GestureRecognizers.Add(tap);
-                st1.Children.Add(frame2);
-
-                st.Children.Add(st1);
+                kategooriad.Insert(1, new Kategooriad(0, "-", "test"));
             }
-            Content = st;
-        }
-        public GroceryPage(int[] ints)
-        {
-            this.ints = ints;
-            Title = "Товары";
-
-            //Content = st;
-        }
-
-
-
-        public async void Tap_Tapped(object sender, EventArgs e)
-        {
-            await Navigation.PushAsync(new GroceryPage(ints));
         }
     }
 }
 //Неделя на выполнение - до 14.05
-//План действий:
-//  1. Создание базы данных
-//  2. Заполнение базы данных
-//  3. Написание кода
-//  4. Тестировка
-//  5. Оформление
-//  6. Тестировка
 
 /*
  * Сделать расстояние между боксами одинаковое
