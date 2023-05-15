@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using Xamarin.Forms;
-using Xamarin.Forms.PlatformConfiguration.iOSSpecific;
 using Xamarin.Forms.Xaml;
 
 namespace MyGrum.Views
@@ -21,6 +20,7 @@ namespace MyGrum.Views
         
         List<Kategooriad> kategooriad = new List<Kategooriad>();
         Grid grid;
+        List<Label> labels = new List<Label>();
         
         public GroceryPage()
         {
@@ -33,6 +33,7 @@ namespace MyGrum.Views
 
             grid = new Grid
             {
+                VerticalOptions = LayoutOptions.Start,
                 RowDefinitions = new RowDefinitionCollection { new RowDefinition() },
                 ColumnDefinitions = new ColumnDefinitionCollection{ new ColumnDefinition(), new ColumnDefinition(), new ColumnDefinition() },
                 Margin = 10
@@ -44,32 +45,35 @@ namespace MyGrum.Views
                 int column = i % 3;
 
                 Label label = new Label
-                {
+                {                    
                     Text = kategooriad[i].Kategooria,
                     VerticalOptions = LayoutOptions.Center,
                     HorizontalOptions = LayoutOptions.Center,
                     FontSize = 20
                 };
+                labels.Add(label);
 
                 Frame frame = new Frame
-                {
+                {                   
                     BorderColor = Color.Black,
                     BackgroundColor = Color.Transparent,
                     CornerRadius = 15,
+                    WidthRequest = 120,
+                    HeightRequest = 80,
                     Content = label
-                };
-
+                };                
                 frame.GestureRecognizers.Add(tap);
 
                 grid.Children.Add(frame, column, row);
             }
-            
-            Content = grid;
+            ScrollView scrollView = new ScrollView { Content = grid };
+            Content = scrollView;
         }
-        public GroceryPage(int[] ints)
+        public GroceryPage(string zxc)
         {
-            this.ints = ints;
+            //this.zxc = zxc;
             Title = "Товары";
+            Title = zxc;
 
             //Content = st;
         }
@@ -81,8 +85,8 @@ namespace MyGrum.Views
                 await Navigation.PushAsync(new ListPage());
             }
             else
-            {
-                await Navigation.PushAsync(new GroceryPage(ints));
+            {                
+                await Navigation.PushAsync(new GroceryPage(labels[frm.TabIndex].Text));
             }            
         }
 
@@ -102,19 +106,13 @@ namespace MyGrum.Views
                     Kategooriad kategooria = new Kategooriad(int.Parse(columns[0]), columns[1], columns[2]);
                     kategooriad.Add(kategooria);
                 }
-            }
-            kategooriad.Add(new Kategooriad( 0, "+", "test" ));
-            for (int i = 0; i < 13; i++)
-            {
-                kategooriad.Insert(1, new Kategooriad(0, "-", "test"));
-            }
+            }                        
+            kategooriad.Add(new Kategooriad(0, "+", "test"));
         }
     }
 }
-//Неделя на выполнение - до 14.05
 
 /*
- * Сделать расстояние между боксами одинаковое
  * Заменить цифры на картинки
  * Переделать страницу в общий класс
  */
