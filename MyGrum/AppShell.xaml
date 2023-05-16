@@ -28,10 +28,4 @@
             <Style TargetType="FlyoutItem" BasedOn="{StaticResource BaseStyle}" />
         </ResourceDictionary>
     </Shell.Resources>
-
-    <TabBar>
-        <ShellContent Title="Продукты" Icon="icons/page1.png" ContentTemplate="{DataTemplate local:GroceryPage}" />
-        <ShellContent Title="Список" Icon="icons/page2.png" ContentTemplate="{DataTemplate local:ListPage}" />
-        <ShellContent Title="Рецепты" Icon="icons/page3.png" ContentTemplate="{DataTemplate local:RecipesPage}" />
-    </TabBar>
 </Shell>

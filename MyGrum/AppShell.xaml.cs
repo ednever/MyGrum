@@ -5,11 +5,23 @@ using Xamarin.Forms;
 
 namespace MyGrum
 {
-    public partial class AppShell : Xamarin.Forms.Shell
+    public partial class AppShell : Shell
     {
         public AppShell()
         {
             InitializeComponent();
+
+            string[,] pealkirjad = { {"Продукты", "page1.png"}, {"Список", "page2.png"}, {"Рецепты", "page3.png"} };
+            List<ContentPage> pages = new List<ContentPage> { new GroceryPage("Категории", true), new ListPage(), new RecipesPage() };
+
+            TabBar tabBar = new TabBar();
+
+            for (int i = 0; i < pealkirjad.Length / 2; i++)
+            {
+                tabBar.Items.Add(new ShellContent { Title = pealkirjad[i, i * 0], Icon = pealkirjad[i, i * 0 + 1], Content = pages[i] });
+            }
+
+            Items.Add(tabBar);
         }
     }
 }

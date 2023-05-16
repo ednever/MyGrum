@@ -13,6 +13,12 @@ namespace MyGrum.Models
         public string Pilt { get; set; }
         public int KategooriaID { get; set; }
 
+        public Tooted(int TooteID, string Toote, string Pilt, int KategooriaID)
+        {
+            this.TooteID = TooteID;
+            this.Toote = Toote;
+            this.Pilt = Pilt;
+            this.KategooriaID = KategooriaID;
+        }
     }
 }
-//Решить проблему с ForeignKey

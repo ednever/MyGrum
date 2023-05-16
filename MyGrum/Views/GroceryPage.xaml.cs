@@ -13,69 +13,96 @@ namespace MyGrum.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class GroceryPage : ContentPage
     {
-        int[] ints = { 1, 2, 3, 4, 5, 6 };
-
         string[] fileNames = { "Kategooriad.txt", "Tooted.txt" };
         string folderPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-        
+
+        //List<object> kategooriad, tooted;
+        //List<List<object>> lists = new List<List<object>>() { kategooriad, tooted };
+
         List<Kategooriad> kategooriad = new List<Kategooriad>();
+        List<Tooted> tooted = new List<Tooted>();
+
         Grid grid;
         List<Label> labels = new List<Label>();
-        
-        public GroceryPage()
+        TapGestureRecognizer tap = new TapGestureRecognizer();
+
+        public GroceryPage(string pealkiri, bool kvst)
         {
-            Title = "Категории";
+            Title = pealkiri;
 
-            TapGestureRecognizer tap = new TapGestureRecognizer();
             tap.Tapped += Tap_Tapped;
-
-            FileOutput();
+            FileOutput(kvst);
 
             grid = new Grid
             {
                 VerticalOptions = LayoutOptions.Start,
                 RowDefinitions = new RowDefinitionCollection { new RowDefinition() },
-                ColumnDefinitions = new ColumnDefinitionCollection{ new ColumnDefinition(), new ColumnDefinition(), new ColumnDefinition() },
+                ColumnDefinitions = new ColumnDefinitionCollection { new ColumnDefinition(), new ColumnDefinition(), new ColumnDefinition() },
                 Margin = 10
             };
-
-            for (int i = 0; i < kategooriad.Count; i++)
+            if (kvst)
             {
-                int row = i / 3;
-                int column = i % 3;
+                for (int i = 0; i < kategooriad.Count; i++)
+                {
+                    int row = i / 3;
+                    int column = i % 3;
 
-                Label label = new Label
-                {                    
-                    Text = kategooriad[i].Kategooria,
-                    VerticalOptions = LayoutOptions.Center,
-                    HorizontalOptions = LayoutOptions.Center,
-                    FontSize = 20
-                };
-                labels.Add(label);
+                    Label label = new Label
+                    {
+                        Text = kategooriad[i].Kategooria,
+                        VerticalOptions = LayoutOptions.Center,
+                        HorizontalOptions = LayoutOptions.Center,
+                        FontSize = 20
+                    };
+                    labels.Add(label);
 
-                Frame frame = new Frame
-                {                   
-                    BorderColor = Color.Black,
-                    BackgroundColor = Color.Transparent,
-                    CornerRadius = 15,
-                    WidthRequest = 120,
-                    HeightRequest = 80,
-                    Content = label
-                };                
-                frame.GestureRecognizers.Add(tap);
+                    Frame frame = new Frame
+                    {
+                        BorderColor = Color.Black,
+                        BackgroundColor = Color.Transparent,
+                        CornerRadius = 15,
+                        WidthRequest = 120,
+                        HeightRequest = 80,
+                        Content = label
+                    };
+                    frame.GestureRecognizers.Add(tap);
 
-                grid.Children.Add(frame, column, row);
+                    grid.Children.Add(frame, column, row);
+                }
             }
+            else
+            {
+                for (int i = 0; i < tooted.Count; i++)
+                {
+                    int row = i / 3;
+                    int column = i % 3;
+
+                    Label label = new Label
+                    {
+                        Text = tooted[i].Toote,
+                        VerticalOptions = LayoutOptions.Center,
+                        HorizontalOptions = LayoutOptions.Center,
+                        FontSize = 20
+                    };
+                    labels.Add(label);
+
+                    Frame frame = new Frame
+                    {
+                        BorderColor = Color.Black,
+                        BackgroundColor = Color.Transparent,
+                        CornerRadius = 15,
+                        WidthRequest = 120,
+                        HeightRequest = 80,
+                        Content = label
+                    };
+                    frame.GestureRecognizers.Add(tap);
+
+                    grid.Children.Add(frame, column, row);
+                }
+            }
+            
             ScrollView scrollView = new ScrollView { Content = grid };
             Content = scrollView;
-        }
-        public GroceryPage(string zxc)
-        {
-            //this.zxc = zxc;
-            Title = "Товары";
-            Title = zxc;
-
-            //Content = st;
         }
         public async void Tap_Tapped(object sender, EventArgs e)
         {
@@ -86,28 +113,44 @@ namespace MyGrum.Views
             }
             else
             {                
-                await Navigation.PushAsync(new GroceryPage(labels[frm.TabIndex].Text));
+                await Navigation.PushAsync(new GroceryPage(labels[frm.TabIndex].Text, false));
             }            
         }
-
-        public void FileOutput()
+        public void FileOutput(bool kvst)
         {
             //Создание файлов
             //File.WriteAllText(Path.Combine(folderPath, fileNames[0]), "1,Овощи,vegetables.png"); //Категория
             //File.WriteAllText(Path.Combine(folderPath, fileNames[1]), "1,Картофель,potato.png,1"); //Товар
-
-            if (String.IsNullOrEmpty(fileNames[0])) return;
-            if (fileNames[0] != null)
+            if (kvst)
             {
-                String[] Andmed = File.ReadAllLines(Path.Combine(folderPath, fileNames[0]));
-                for (int i = 0; i < Andmed.Length; i++)
+                if (String.IsNullOrEmpty(fileNames[0])) return;
+                if (fileNames[0] != null)
                 {
-                    var columns = Andmed[i].Split(',');
-                    Kategooriad kategooria = new Kategooriad(int.Parse(columns[0]), columns[1], columns[2]);
-                    kategooriad.Add(kategooria);
+                    String[] Andmed = File.ReadAllLines(Path.Combine(folderPath, fileNames[0]));
+                    for (int i = 0; i < Andmed.Length; i++)
+                    {
+                        var columns = Andmed[i].Split(',');
+                        Kategooriad kategooria = new Kategooriad(int.Parse(columns[0]), columns[1], columns[2]);
+                        kategooriad.Add(kategooria);
+                    }
                 }
-            }                        
-            kategooriad.Add(new Kategooriad(0, "+", "test"));
+                kategooriad.Add(new Kategooriad(0, "+", "test"));
+            }
+            else
+            {
+                if (String.IsNullOrEmpty(fileNames[1])) return;
+                if (fileNames[1] != null)
+                {
+                    String[] Andmed = File.ReadAllLines(Path.Combine(folderPath, fileNames[1]));
+                    for (int i = 0; i < Andmed.Length; i++)
+                    {
+                        var columns = Andmed[i].Split(',');
+                        Tooted toote = new Tooted(int.Parse(columns[0]), columns[1], columns[2], int.Parse(columns[3]));
+                        tooted.Add(toote);
+                    }
+                }
+                tooted.Add(new Tooted(0, "+", "test", 0));
+            }
         }
     }
 }
