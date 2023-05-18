@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="Models\Classes.cs" />
     <Compile Include="Models\Kategooriad.cs" />
     <Compile Include="Models\Tooted.cs" />
   </ItemGroup>

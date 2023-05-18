@@ -4,12 +4,12 @@ using System.Text;
 
 namespace MyGrum.Models
 { 
-    public class Kategooriad
+    public class Kategooriad : Classes
     {
         public int KategooriaID { get; set; }
         public string Kategooria { get; set; }
         public string Pilt { get; set; }
-
+        public Kategooriad(){}
         public Kategooriad(int KategooriaID, string Kategooria, string Pilt) 
         { 
             this.KategooriaID = KategooriaID;

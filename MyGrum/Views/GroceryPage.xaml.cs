@@ -16,9 +16,6 @@ namespace MyGrum.Views
         string[] fileNames = { "Kategooriad.txt", "Tooted.txt" };
         string folderPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
 
-        //List<object> kategooriad, tooted;
-        //List<List<object>> lists = new List<List<object>>() { kategooriad, tooted };
-
         List<Kategooriad> kategooriad = new List<Kategooriad>();
         List<Tooted> tooted = new List<Tooted>();
 
@@ -109,7 +106,7 @@ namespace MyGrum.Views
             Frame frm = (Frame)sender;
             if (grid.Children.Last() == frm)
             {
-                await Navigation.PushAsync(new ListPage());
+                await Navigation.PushAsync(new AddingPage());
             }
             else
             {                
@@ -156,6 +153,7 @@ namespace MyGrum.Views
 }
 
 /*
+ * 
  * Заменить цифры на картинки
  * Переделать страницу в общий класс
  */
