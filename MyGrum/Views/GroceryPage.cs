@@ -69,7 +69,7 @@ namespace MyGrum.Views
                         CornerRadius = 15,
                         WidthRequest = 120,
                         HeightRequest = 80,
-                        Content = image
+                        Content = new StackLayout { Children = { image, label } }
                     };
                     frame.GestureRecognizers.Add(tap);
 
@@ -87,35 +87,31 @@ namespace MyGrum.Views
                     {
                         Source = ImageSource.FromFile(tooted[i].Pilt),
                         Aspect = Aspect.AspectFill,
-                        //WidthRequest = 120,
-                        //HeightRequest = 80,
                     };
-                    //image.GestureRecognizers.Add(tap);
 
                     Label label = new Label
                     {
                         Text = tooted[i].Toote,
                         VerticalOptions = LayoutOptions.Center,
                         HorizontalOptions = LayoutOptions.Center,
-                        FontSize = 20
+                        FontSize = 15
                     };
                     labels.Add(label);
 
                     Frame frame = new Frame
                     {
                         BorderColor = Color.Black,
-                        BackgroundColor = Color.Transparent,
                         CornerRadius = 15,
                         WidthRequest = 120,
                         HeightRequest = 80,
-                        Content = image
+                        Content = new StackLayout { Children = { image, label } }
                     };
                     frame.GestureRecognizers.Add(tap);
 
-                    grid.Children.Add(image, column, row);
+                    grid.Children.Add(frame, column, row);
                 }
             }
-            
+
             ScrollView scrollView = new ScrollView { Content = grid };
             Content = scrollView;
         }
@@ -125,13 +121,13 @@ namespace MyGrum.Views
 
             if (grid.Children.Last() == frm)
             {
-                await Navigation.PushAsync(new AddingPage());
+                await Navigation.PushAsync(new AddingPage(test));
             }
             else
             {
                 //if (sender.GetType() == frm.GetType())
                 //{
-                    
+
                 //}
                 if (test)
                 {
@@ -146,10 +142,10 @@ namespace MyGrum.Views
                     else
                     {
                         frm.BackgroundColor = Color.Gray;
-                        Preferences.Set("","");
-                    }                 
-                }                
-            }            
+                        Preferences.Set("1", "Картофель");
+                    }
+                }
+            }
         }
         public void FileOutput(bool kvst)
         {
