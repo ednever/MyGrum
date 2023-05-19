@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.IO;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using Xamarin.Essentials;
 
 namespace MyGrum.Views
 {
@@ -22,10 +23,12 @@ namespace MyGrum.Views
         Grid grid;
         List<Label> labels = new List<Label>();
         TapGestureRecognizer tap = new TapGestureRecognizer();
+        bool test;
 
         public GroceryPage(string pealkiri, bool kvst)
         {
             Title = pealkiri;
+            this.test = kvst;
 
             tap.Tapped += Tap_Tapped;
             FileOutput(kvst);
@@ -44,6 +47,12 @@ namespace MyGrum.Views
                     int row = i / 3;
                     int column = i % 3;
 
+                    Image image = new Image
+                    {
+                        Source = ImageSource.FromFile(kategooriad[i].Pilt),
+                        Aspect = Aspect.AspectFill,
+                    };
+
                     Label label = new Label
                     {
                         Text = kategooriad[i].Kategooria,
@@ -60,7 +69,7 @@ namespace MyGrum.Views
                         CornerRadius = 15,
                         WidthRequest = 120,
                         HeightRequest = 80,
-                        Content = label
+                        Content = image
                     };
                     frame.GestureRecognizers.Add(tap);
 
@@ -73,6 +82,15 @@ namespace MyGrum.Views
                 {
                     int row = i / 3;
                     int column = i % 3;
+
+                    Image image = new Image
+                    {
+                        Source = ImageSource.FromFile(tooted[i].Pilt),
+                        Aspect = Aspect.AspectFill,
+                        //WidthRequest = 120,
+                        //HeightRequest = 80,
+                    };
+                    //image.GestureRecognizers.Add(tap);
 
                     Label label = new Label
                     {
@@ -90,11 +108,11 @@ namespace MyGrum.Views
                         CornerRadius = 15,
                         WidthRequest = 120,
                         HeightRequest = 80,
-                        Content = label
+                        Content = image
                     };
                     frame.GestureRecognizers.Add(tap);
 
-                    grid.Children.Add(frame, column, row);
+                    grid.Children.Add(image, column, row);
                 }
             }
             
@@ -104,13 +122,33 @@ namespace MyGrum.Views
         public async void Tap_Tapped(object sender, EventArgs e)
         {
             Frame frm = (Frame)sender;
+
             if (grid.Children.Last() == frm)
             {
                 await Navigation.PushAsync(new AddingPage());
             }
             else
-            {                
-                await Navigation.PushAsync(new GroceryPage(labels[frm.TabIndex].Text, false));
+            {
+                //if (sender.GetType() == frm.GetType())
+                //{
+                    
+                //}
+                if (test)
+                {
+                    await Navigation.PushAsync(new GroceryPage(labels[frm.TabIndex].Text, false));
+                }
+                else
+                {
+                    if (frm.BackgroundColor == Color.Gray)
+                    {
+                        frm.BackgroundColor = Color.White;
+                    }
+                    else
+                    {
+                        frm.BackgroundColor = Color.Gray;
+                        Preferences.Set("","");
+                    }                 
+                }                
             }            
         }
         public void FileOutput(bool kvst)
@@ -118,6 +156,7 @@ namespace MyGrum.Views
             //Создание файлов
             //File.WriteAllText(Path.Combine(folderPath, fileNames[0]), "1,Овощи,vegetables.png"); //Категория
             //File.WriteAllText(Path.Combine(folderPath, fileNames[1]), "1,Картофель,potato.png,1"); //Товар
+
             if (kvst)
             {
                 if (String.IsNullOrEmpty(fileNames[0])) return;
@@ -148,6 +187,10 @@ namespace MyGrum.Views
                 }
                 tooted.Add(new Tooted(0, "+", "test", 0));
             }
+        }
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
         }
     }
 }
