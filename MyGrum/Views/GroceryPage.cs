@@ -21,7 +21,7 @@ namespace MyGrum.Views
         List<Tooted> tooted = new List<Tooted>();
 
         Grid grid;
-        List<Label> labels = new List<Label>();
+        List<Image> images = new List<Image>();
         TapGestureRecognizer tap = new TapGestureRecognizer();
         bool test;
 
@@ -47,29 +47,26 @@ namespace MyGrum.Views
                     int row = i / 3;
                     int column = i % 3;
 
+                    
                     Image image = new Image
                     {
+                        AutomationId = kategooriad[i].Kategooria,
                         Source = ImageSource.FromFile(kategooriad[i].Pilt),
                         Aspect = Aspect.AspectFill,
+                        Margin = -19,
+                        HeightRequest = 118
                     };
 
-                    Label label = new Label
-                    {
-                        Text = kategooriad[i].Kategooria,
-                        VerticalOptions = LayoutOptions.Center,
-                        HorizontalOptions = LayoutOptions.Center,
-                        FontSize = 20
-                    };
-                    labels.Add(label);
+                    images.Add(image);
 
                     Frame frame = new Frame
                     {
                         BorderColor = Color.Black,
-                        BackgroundColor = Color.Transparent,
+                        BackgroundColor = Color.Transparent,                     
                         CornerRadius = 15,
                         WidthRequest = 120,
                         HeightRequest = 80,
-                        Content = new StackLayout { Children = { image, label } }
+                        Content = new StackLayout { Children = { image } }
                     };
                     frame.GestureRecognizers.Add(tap);
 
@@ -85,18 +82,13 @@ namespace MyGrum.Views
 
                     Image image = new Image
                     {
+                        AutomationId = tooted[i].Toote,
                         Source = ImageSource.FromFile(tooted[i].Pilt),
                         Aspect = Aspect.AspectFill,
+                        Margin = -19,
+                        HeightRequest = 118
                     };
-
-                    Label label = new Label
-                    {
-                        Text = tooted[i].Toote,
-                        VerticalOptions = LayoutOptions.Center,
-                        HorizontalOptions = LayoutOptions.Center,
-                        FontSize = 15
-                    };
-                    labels.Add(label);
+                    images.Add(image);
 
                     Frame frame = new Frame
                     {
@@ -104,13 +96,16 @@ namespace MyGrum.Views
                         CornerRadius = 15,
                         WidthRequest = 120,
                         HeightRequest = 80,
-                        Content = new StackLayout { Children = { image, label } }
+                        Content = new StackLayout { Children = { image } }
                     };
                     frame.GestureRecognizers.Add(tap);
 
                     grid.Children.Add(frame, column, row);
                 }
             }
+
+            images.Last().HeightRequest = 80;
+            images.Last().Margin = 0;
 
             ScrollView scrollView = new ScrollView { Content = grid };
             Content = scrollView;
@@ -125,24 +120,20 @@ namespace MyGrum.Views
             }
             else
             {
-                //if (sender.GetType() == frm.GetType())
-                //{
-
-                //}
                 if (test)
                 {
-                    await Navigation.PushAsync(new GroceryPage(labels[frm.TabIndex].Text, false));
+                    await Navigation.PushAsync(new GroceryPage(images[frm.TabIndex].AutomationId, false));
                 }
                 else
                 {
-                    if (frm.BackgroundColor == Color.Gray)
+                    if (frm.Opacity == 1)
                     {
-                        frm.BackgroundColor = Color.White;
+                        frm.Opacity = 0.5;
                     }
                     else
                     {
-                        frm.BackgroundColor = Color.Gray;
-                        Preferences.Set("1", "Картофель");
+                        frm.Opacity = 1;
+                        Preferences.Set("1", images[frm.TabIndex].AutomationId);
                     }
                 }
             }
@@ -166,7 +157,7 @@ namespace MyGrum.Views
                         kategooriad.Add(kategooria);
                     }
                 }
-                kategooriad.Add(new Kategooriad(0, "+", "test"));
+                kategooriad.Add(new Kategooriad(0, "+", "plus.png"));
             }
             else
             {
@@ -181,7 +172,7 @@ namespace MyGrum.Views
                         tooted.Add(toote);
                     }
                 }
-                tooted.Add(new Tooted(0, "+", "test", 0));
+                tooted.Add(new Tooted(0, "+", "plus.png", 0));
             }
         }
         protected override void OnAppearing()
@@ -192,6 +183,5 @@ namespace MyGrum.Views
 }
 
 /*
- * Заменить цифры на картинки
  * Переделать страницу в общий класс
  */

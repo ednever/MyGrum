@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Text;
 using Xamarin.Forms.Xaml;
@@ -10,67 +11,82 @@ namespace MyGrum.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class AddingPage : ContentPage
     {
-        Image imageView;
+        string[] fileNames = { "Kategooriad.txt", "Tooted.txt" };
+        string folderPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+        Image image;
+        Entry entry;
+        bool test;
         public AddingPage(bool kvst)
         {
-            if (kvst)
+            this.test = kvst;
+            TapGestureRecognizer tap = new TapGestureRecognizer();
+            tap.Tapped += Tap_Tapped;
+
+            if (test)
                 Title = "Добавление категории";          
             else
                 Title = "Добавление товара";
 
-            Button selectImageButton = new Button
-            {
-                Text = "Выбрать изображение"
-            };
-
-            imageView = new Image
-            {
+            image = new Image 
+            { 
+                Source = ImageSource.FromFile("plus.png"),
                 Aspect = Aspect.AspectFit
             };
-
-            selectImageButton.Clicked += Button_Clicked;
-
-            Label label = new Label { Text= "Название", FontSize = 40 };
-
-
-
-            Entry entry = new Entry
+            Frame frame = new Frame 
             {
-                Placeholder = "Введите текст"
+                BorderColor = Color.Black,
+                WidthRequest = 200,
+                HeightRequest = 200,
+                HorizontalOptions = LayoutOptions.Center,
+                VerticalOptions = LayoutOptions.Center,
+                Margin = new Thickness(0,10,0,0),
+                Content = image 
             };
-
+            frame.GestureRecognizers.Add(tap);
+        
+            Label label = new Label { Text = "Название", FontSize = 25, FontAttributes = FontAttributes.Bold };
+            entry = new Entry { Placeholder = "Введите текст" };
             Button button = new Button { Text = "Сохранить" };
 
-            // Добавьте кнопку и ImageView в вашу пользовательскую разметку или контейнер
-            // Например, в StackLayout:
-            StackLayout layout = new StackLayout { Children = { imageView, selectImageButton, label, entry } };
-            Content= layout;
+
+            StackLayout st2 = new StackLayout { };
+            StackLayout st1 = new StackLayout 
+            { 
+                HorizontalOptions = LayoutOptions.End,
+                Children = { button } 
+            };
+            StackLayout st = new StackLayout { Children = { frame, label, entry, st1 } };
+            Content = st;
         }
 
-        async void Button_Clicked(object sender, EventArgs e)
+        async void Tap_Tapped(object sender, EventArgs e)
+        {
+            var pickResult = await FilePicker.PickAsync(new PickOptions
+            {
+                FileTypes = FilePickerFileType.Images,
+                PickerTitle = "Выберите изображение"
+            });
+
+            if (pickResult != null)
+            {
+                image.Source = ImageSource.FromFile(pickResult.FullPath);
+                image.Margin = -20;                
+            }            
+        }
+
+        void Button_Clicked(object sender, EventArgs e)
         {
             Button btn = (Button)sender;
-            if (btn.Text == "Выбрать изображение")
+            if (File.Exists(Path.Combine(folderPath, fileNames[0])))
             {
-                var pickResult = await FilePicker.PickAsync(new PickOptions
-                {
-                    FileTypes = FilePickerFileType.Images,
-                    PickerTitle = "Выберите изображение"
-                });
-
-                if (pickResult != null)
-                {
-                    // Получите путь к выбранному изображению
-                    string imagePath = pickResult.FullPath;
-
-                    // Установите источник изображения для ImageView
-                    imageView.Source = ImageSource.FromFile(imagePath);
-                }
-            }
-            else
-            {
-
+                File.AppendAllText(Path.Combine(folderPath, fileNames[0]), "\n" + "" + "," + entry.Text + "," + ""); //Доработать
             }
         }
     }
 }
+
+/**
+ * Порядковый номер вместо кавычек
+ * Название картинки из её полного путя вместо кавычек
+ * Другая версия страницы для товаров
+ */
