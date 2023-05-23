@@ -47,7 +47,6 @@ namespace MyGrum.Views
                     int row = i / 3;
                     int column = i % 3;
 
-                    
                     Image image = new Image
                     {
                         AutomationId = kategooriad[i].Kategooria,
@@ -61,6 +60,7 @@ namespace MyGrum.Views
 
                     Frame frame = new Frame
                     {
+                        TabIndex = i,
                         BorderColor = Color.Black,
                         BackgroundColor = Color.Transparent,                     
                         CornerRadius = 15,
@@ -116,7 +116,7 @@ namespace MyGrum.Views
 
             if (grid.Children.Last() == frm)
             {
-                await Navigation.PushAsync(new AddingPage(test));
+                await Navigation.PushAsync(new AddingPage(test, frm.TabIndex));
             }
             else
             {
@@ -184,4 +184,6 @@ namespace MyGrum.Views
 
 /*
  * Переделать страницу в общий класс
+ * При создании новой категории страница заполняется старыми товарами
+ * Не отображаются картинки взятые с устройства
  */

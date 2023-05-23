@@ -5,6 +5,8 @@ using System.Text;
 using Xamarin.Forms.Xaml;
 using Xamarin.Forms;
 using Xamarin.Essentials;
+using MyGrum.Models;
+using System.Threading.Tasks;
 
 namespace MyGrum.Views
 {
@@ -15,14 +17,19 @@ namespace MyGrum.Views
         string folderPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
         Image image;
         Entry entry;
-        bool test;
-        public AddingPage(bool kvst)
+        bool kvst;
+        string newImageName;
+        int num;
+
+        public AddingPage(bool kvst, int num)
         {
-            this.test = kvst;
+            this.kvst = kvst;
+            this.num = num;
+
             TapGestureRecognizer tap = new TapGestureRecognizer();
             tap.Tapped += Tap_Tapped;
 
-            if (test)
+            if (kvst)
                 Title = "Добавление категории";          
             else
                 Title = "Добавление товара";
@@ -39,17 +46,16 @@ namespace MyGrum.Views
                 HeightRequest = 200,
                 HorizontalOptions = LayoutOptions.Center,
                 VerticalOptions = LayoutOptions.Center,
-                Margin = new Thickness(0,10,0,0),
+                Margin = new Thickness(0,20,0,0),
                 Content = image 
             };
             frame.GestureRecognizers.Add(tap);
         
-            Label label = new Label { Text = "Название", FontSize = 25, FontAttributes = FontAttributes.Bold };
-            entry = new Entry { Placeholder = "Введите текст" };
-            Button button = new Button { Text = "Сохранить" };
+            Label label = new Label { Text = "Название", FontSize = 25, FontAttributes = FontAttributes.Bold, Margin = new Thickness(20, 20, 0, 0) };
+            entry = new Entry { Placeholder = "Введите текст", Margin = new Thickness(20, 0, 20, 0) };
+            Button button = new Button { Text = "Сохранить", Margin = new Thickness(0,20,20,0) };
+            button.Clicked += Button_Clicked;
 
-
-            StackLayout st2 = new StackLayout { };
             StackLayout st1 = new StackLayout 
             { 
                 HorizontalOptions = LayoutOptions.End,
@@ -69,24 +75,24 @@ namespace MyGrum.Views
 
             if (pickResult != null)
             {
-                image.Source = ImageSource.FromFile(pickResult.FullPath);
-                image.Margin = -20;                
+                newImageName = pickResult.FileName;
+                image.Source = ImageSource.FromFile(pickResult.FullPath);                
+                image.Margin = -20;                   
             }            
         }
 
-        void Button_Clicked(object sender, EventArgs e)
+        async void Button_Clicked(object sender, EventArgs e)
         {
             Button btn = (Button)sender;
-            if (File.Exists(Path.Combine(folderPath, fileNames[0])))
+            if (File.Exists(Path.Combine(folderPath, fileNames[0]))) //Категория
             {
-                File.AppendAllText(Path.Combine(folderPath, fileNames[0]), "\n" + "" + "," + entry.Text + "," + ""); //Доработать
+                File.AppendAllText(Path.Combine(folderPath, fileNames[0]), "\n" + num.ToString() + "," + entry.Text + "," + newImageName); //число,название,картинка
+                await Navigation.PopAsync();
             }
         }
     }
 }
 
 /**
- * Порядковый номер вместо кавычек
- * Название картинки из её полного путя вместо кавычек
  * Другая версия страницы для товаров
  */
