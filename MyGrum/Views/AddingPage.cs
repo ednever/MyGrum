@@ -65,20 +65,22 @@ namespace MyGrum.Views
             Content = st;
         }
 
-        async void Tap_Tapped(object sender, EventArgs e)
+        void Tap_Tapped(object sender, EventArgs e)
         {
-            var pickResult = await FilePicker.PickAsync(new PickOptions
-            {
-                FileTypes = FilePickerFileType.Images,
-                PickerTitle = "Выберите изображение"
-            });
+            //var pickResult = await FilePicker.PickAsync(new PickOptions
+            //{
+            //    FileTypes = FilePickerFileType.Images,
+            //    PickerTitle = "Выберите изображение"
+            //});
 
-            if (pickResult != null)
-            {
-                newImageName = pickResult.FileName;
-                image.Source = ImageSource.FromFile(pickResult.FullPath);                
-                image.Margin = -20;                   
-            }            
+            SelectImageFromDevice();
+
+            //if (pickResult != null)
+            //{
+            //    newImageName = pickResult.FileName;
+            //    image.Source = ImageSource.FromFile(pickResult.FullPath);                
+            //    image.Margin = -20;                   
+            //}            
         }
 
         async void Button_Clicked(object sender, EventArgs e)
@@ -89,6 +91,43 @@ namespace MyGrum.Views
                 File.AppendAllText(Path.Combine(folderPath, fileNames[0]), "\n" + num.ToString() + "," + entry.Text + "," + newImageName); //число,название,картинка
                 await Navigation.PopAsync();
             }
+        }
+        async public void SelectImageFromDevice()
+        {
+            var pickResultTask = FilePicker.PickAsync(new PickOptions
+            {
+                FileTypes = FilePickerFileType.Images,
+                PickerTitle = "Выберите изображение"
+            });
+
+            await pickResultTask.ContinueWith(t =>
+            {
+                var pickResult = t.Result;
+
+                if (pickResult != null)
+                {
+                    // Сохранение изображения во внутреннее хранилище приложения
+                    var imagePath = Path.Combine(FileSystem.AppDataDirectory, pickResult.FileName);
+
+                    using (var stream = pickResult.OpenReadAsync().Result)
+                    {
+                        using (var fileStream = File.OpenWrite(imagePath))
+                        {
+                            stream.CopyToAsync(fileStream).Wait();
+                        }
+                    }
+
+                    //imageControl.Source = ImageSource.FromFile(imagePath);
+
+                    // Отображение изображения в элементе управления Image
+                    Device.BeginInvokeOnMainThread(() =>
+                    {
+                        newImageName = pickResult.FileName;
+                        image.Source = ImageSource.FromFile(imagePath);
+                        image.Margin = -20;
+                    });
+                }
+            });
         }
     }
 }

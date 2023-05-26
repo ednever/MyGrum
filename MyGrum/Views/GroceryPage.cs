@@ -47,14 +47,24 @@ namespace MyGrum.Views
                     int row = i / 3;
                     int column = i % 3;
 
+                    string imagePathhhh;
+                    if (i == 0)
+                    {
+                        imagePathhhh = kategooriad[i].Pilt;
+                    }
+                    else
+                    {
+                        imagePathhhh = Path.Combine(FileSystem.AppDataDirectory, kategooriad[i].Pilt);
+                    }
                     Image image = new Image
                     {
                         AutomationId = kategooriad[i].Kategooria,
-                        Source = ImageSource.FromFile(kategooriad[i].Pilt),
+                        Source = ImageSource.FromFile(imagePathhhh),
                         Aspect = Aspect.AspectFill,
                         Margin = -19,
                         HeightRequest = 118
                     };
+                    
 
                     images.Add(image);
 
@@ -140,6 +150,9 @@ namespace MyGrum.Views
         }
         public void FileOutput(bool kvst)
         {
+            //Очистка файлов
+            //File.Delete(Path.Combine(folderPath, fileNames[0]));
+            //File.Delete(Path.Combine(folderPath, fileNames[1]));
             //Создание файлов
             //File.WriteAllText(Path.Combine(folderPath, fileNames[0]), "1,Овощи,vegetables.png"); //Категория
             //File.WriteAllText(Path.Combine(folderPath, fileNames[1]), "1,Картофель,potato.png,1"); //Товар

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace MyGrum.Models
 { 
-    public class Kategooriad : Classes
+    public class Kategooriad
     {
         public int KategooriaID { get; set; }
         public string Kategooria { get; set; }

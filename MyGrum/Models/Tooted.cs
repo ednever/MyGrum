@@ -6,7 +6,7 @@ using System.Text;
 
 namespace MyGrum.Models
 {
-    public class Tooted : Classes
+    public class Tooted
     {
         public int TooteID { get; set; }
         public string Toote { get; set; }
