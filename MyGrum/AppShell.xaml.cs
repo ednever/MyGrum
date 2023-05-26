@@ -12,7 +12,7 @@ namespace MyGrum
             InitializeComponent();
 
             string[,] pealkirjad = { {"Продукты", "page1.png"}, {"Список", "page2.png"}, {"Рецепты", "page3.png"} };
-            List<ContentPage> pages = new List<ContentPage> { new GroceryPage("Категории", true), new ListPage(), new RecipesPage() };
+            List<ContentPage> pages = new List<ContentPage> { new GroceryPage("Категории", true, 0), new ListPage(), new RecipesPage() };
 
             TabBar tabBar = new TabBar();
 

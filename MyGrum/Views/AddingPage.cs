@@ -19,12 +19,13 @@ namespace MyGrum.Views
         Entry entry;
         bool kvst;
         string newImageName;
-        int num;
+        int num, katID;
 
-        public AddingPage(bool kvst, int num)
+        public AddingPage(bool kvst, int num, int katID)
         {
             this.kvst = kvst;
             this.num = num;
+            this.katID = katID;
 
             TapGestureRecognizer tap = new TapGestureRecognizer();
             tap.Tapped += Tap_Tapped;
@@ -34,11 +35,7 @@ namespace MyGrum.Views
             else
                 Title = "Добавление товара";
 
-            image = new Image 
-            { 
-                Source = ImageSource.FromFile("plus.png"),
-                Aspect = Aspect.AspectFit
-            };
+            image = new Image { Source = ImageSource.FromFile("plus.png"), Aspect = Aspect.AspectFit };
             Frame frame = new Frame 
             {
                 BorderColor = Color.Black,
@@ -56,49 +53,16 @@ namespace MyGrum.Views
             Button button = new Button { Text = "Сохранить", Margin = new Thickness(0,20,20,0) };
             button.Clicked += Button_Clicked;
 
-            StackLayout st1 = new StackLayout 
-            { 
-                HorizontalOptions = LayoutOptions.End,
-                Children = { button } 
-            };
+            StackLayout st1 = new StackLayout { HorizontalOptions = LayoutOptions.End, Children = { button } };
             StackLayout st = new StackLayout { Children = { frame, label, entry, st1 } };
             Content = st;
         }
 
-        void Tap_Tapped(object sender, EventArgs e)
+        async void Tap_Tapped(object sender, EventArgs e)
         {
-            //var pickResult = await FilePicker.PickAsync(new PickOptions
-            //{
-            //    FileTypes = FilePickerFileType.Images,
-            //    PickerTitle = "Выберите изображение"
-            //});
+            //SelectImageFromDevice();
 
-            SelectImageFromDevice();
-
-            //if (pickResult != null)
-            //{
-            //    newImageName = pickResult.FileName;
-            //    image.Source = ImageSource.FromFile(pickResult.FullPath);                
-            //    image.Margin = -20;                   
-            //}            
-        }
-
-        async void Button_Clicked(object sender, EventArgs e)
-        {
-            Button btn = (Button)sender;
-            if (File.Exists(Path.Combine(folderPath, fileNames[0]))) //Категория
-            {
-                File.AppendAllText(Path.Combine(folderPath, fileNames[0]), "\n" + num.ToString() + "," + entry.Text + "," + newImageName); //число,название,картинка
-                await Navigation.PopAsync();
-            }
-        }
-        async public void SelectImageFromDevice()
-        {
-            var pickResultTask = FilePicker.PickAsync(new PickOptions
-            {
-                FileTypes = FilePickerFileType.Images,
-                PickerTitle = "Выберите изображение"
-            });
+            var pickResultTask = FilePicker.PickAsync(new PickOptions { FileTypes = FilePickerFileType.Images });
 
             await pickResultTask.ContinueWith(t =>
             {
@@ -117,7 +81,57 @@ namespace MyGrum.Views
                         }
                     }
 
-                    //imageControl.Source = ImageSource.FromFile(imagePath);
+                    // Отображение изображения в элементе управления Image
+                    Device.BeginInvokeOnMainThread(() =>
+                    {
+                        newImageName = pickResult.FileName;
+                        image.Source = ImageSource.FromFile(imagePath);
+                        image.Margin = -20;
+                    });
+                }
+            });
+        }
+
+        async void Button_Clicked(object sender, EventArgs e)
+        {
+            if (kvst)
+            {
+                if (File.Exists(Path.Combine(folderPath, fileNames[0]))) //Категория
+                {
+                    File.AppendAllText(Path.Combine(folderPath, fileNames[0]), "\n" + num.ToString() + "," + entry.Text + "," + newImageName); //число,название,картинка
+                    await Navigation.PopAsync();
+                }
+            }
+            else
+            {
+                if (File.Exists(Path.Combine(folderPath, fileNames[1]))) //Категория
+                {
+                    File.AppendAllText(Path.Combine(folderPath, fileNames[1]), "\n" + num.ToString() + "," + entry.Text + "," + newImageName + "," + katID); //число,название,картинка,категория
+                    await Navigation.PopAsync();
+                }
+            }
+
+        }
+        async public void SelectImageFromDevice()
+        {
+            var pickResultTask = FilePicker.PickAsync(new PickOptions { FileTypes = FilePickerFileType.Images } );
+
+            await pickResultTask.ContinueWith(t =>
+            {
+                var pickResult = t.Result;
+
+                if (pickResult != null)
+                {
+                    // Сохранение изображения во внутреннее хранилище приложения
+                    var imagePath = Path.Combine(FileSystem.AppDataDirectory, pickResult.FileName);
+
+                    using (var stream = pickResult.OpenReadAsync().Result)
+                    {
+                        using (var fileStream = File.OpenWrite(imagePath))
+                        {
+                            stream.CopyToAsync(fileStream).Wait();
+                        }
+                    }
 
                     // Отображение изображения в элементе управления Image
                     Device.BeginInvokeOnMainThread(() =>
@@ -131,7 +145,3 @@ namespace MyGrum.Views
         }
     }
 }
-
-/**
- * Другая версия страницы для товаров
- */

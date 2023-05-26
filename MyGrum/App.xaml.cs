@@ -12,7 +12,6 @@ namespace MyGrum
         {
             InitializeComponent();
             MainPage = new AppShell();
-            //MainPage = new Classes();
         }
 
         protected override void OnStart()

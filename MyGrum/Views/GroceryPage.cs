@@ -1,10 +1,8 @@
 ﻿using MyGrum.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
+using System.Linq;
+using System.Collections.Generic;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using Xamarin.Essentials;
@@ -19,13 +17,14 @@ namespace MyGrum.Views
 
         List<Kategooriad> kategooriad = new List<Kategooriad>();
         List<Tooted> tooted = new List<Tooted>();
+        List<Tooted> tootedUheKategooriaga = new List<Tooted>();
 
         Grid grid;
         List<Image> images = new List<Image>();
         TapGestureRecognizer tap = new TapGestureRecognizer();
         bool test;
 
-        public GroceryPage(string pealkiri, bool kvst)
+        public GroceryPage(string pealkiri, bool kvst, int katID)
         {
             Title = pealkiri;
             this.test = kvst;
@@ -85,15 +84,22 @@ namespace MyGrum.Views
             }
             else
             {
-                for (int i = 0; i < tooted.Count; i++)
+                foreach (var toote in tooted)
+                {
+                    if (toote.KategooriaID == katID)
+                    {
+                        tootedUheKategooriaga.Insert(0, toote);
+                    }
+                }
+                for (int i = 0; i < tootedUheKategooriaga.Count; i++)
                 {
                     int row = i / 3;
                     int column = i % 3;
 
                     Image image = new Image
                     {
-                        AutomationId = tooted[i].Toote,
-                        Source = ImageSource.FromFile(tooted[i].Pilt),
+                        AutomationId = tootedUheKategooriaga[i].Toote,
+                        Source = ImageSource.FromFile(tootedUheKategooriaga[i].Pilt),
                         Aspect = Aspect.AspectFill,
                         Margin = -19,
                         HeightRequest = 118
@@ -117,6 +123,8 @@ namespace MyGrum.Views
             images.Last().HeightRequest = 80;
             images.Last().Margin = 0;
 
+            tootedUheKategooriaga.Clear();
+
             ScrollView scrollView = new ScrollView { Content = grid };
             Content = scrollView;
         }
@@ -126,13 +134,13 @@ namespace MyGrum.Views
 
             if (grid.Children.Last() == frm)
             {
-                await Navigation.PushAsync(new AddingPage(test, frm.TabIndex));
+                await Navigation.PushAsync(new AddingPage(test, frm.TabIndex, frm.TabIndex + 1));
             }
             else
             {
                 if (test)
                 {
-                    await Navigation.PushAsync(new GroceryPage(images[frm.TabIndex].AutomationId, false));
+                    await Navigation.PushAsync(new GroceryPage(images[frm.TabIndex].AutomationId, false, frm.TabIndex + 1));
                 }
                 else
                 {
@@ -183,20 +191,24 @@ namespace MyGrum.Views
                         var columns = Andmed[i].Split(',');
                         Tooted toote = new Tooted(int.Parse(columns[0]), columns[1], columns[2], int.Parse(columns[3]));
                         tooted.Add(toote);
+                        
                     }
                 }
                 tooted.Add(new Tooted(0, "+", "plus.png", 0));
+                tootedUheKategooriaga.Add(new Tooted(0, "+", "plus.png", 0));
             }
         }
         protected override void OnAppearing()
         {
             base.OnAppearing();
+            //this.Content= null;
         }
     }
 }
 
 /*
  * Переделать страницу в общий класс
- * При создании новой категории страница заполняется старыми товарами
- * Не отображаются картинки взятые с устройства
+ * 
+ * При добавлении нового товара он помещается в первую категорию - 50%
+ * При обновлении страницы ничего не обновляется
  */
