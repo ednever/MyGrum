@@ -99,18 +99,16 @@ namespace MyGrum.Views
                 if (File.Exists(Path.Combine(folderPath, fileNames[0]))) //Категория
                 {
                     File.AppendAllText(Path.Combine(folderPath, fileNames[0]), "\n" + num.ToString() + "," + entry.Text + "," + newImageName); //число,название,картинка
-                    await Navigation.PopAsync();
                 }
             }
             else
             {
-                if (File.Exists(Path.Combine(folderPath, fileNames[1]))) //Категория
+                if (File.Exists(Path.Combine(folderPath, fileNames[1]))) //Товар
                 {
-                    File.AppendAllText(Path.Combine(folderPath, fileNames[1]), "\n" + num.ToString() + "," + entry.Text + "," + newImageName + "," + katID); //число,название,картинка,категория
-                    await Navigation.PopAsync();
+                    File.AppendAllText(Path.Combine(folderPath, fileNames[1]), "\n" + num.ToString() + "," + entry.Text + "," + newImageName + "," + katID); //число,название,картинка,категория                 
                 }
             }
-
+            await Navigation.PopAsync();
         }
         async public void SelectImageFromDevice()
         {

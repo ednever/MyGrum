@@ -23,12 +23,12 @@ namespace MyGrum.Views
         }
         protected override void OnAppearing()
         {
+            base.OnAppearing();
             if (Preferences.ContainsKey("1"))
             {
                 label.Text += "\n" + Preferences.Get("1", "Pole andmed");
                 Preferences.Clear();                
-            }
-            base.OnAppearing();
+            }           
         }
     }  
 }
