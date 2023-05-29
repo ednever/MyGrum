@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using Xamarin.Essentials;
-//using System.Collections;
 
 namespace MyGrum.Views
 {
@@ -25,13 +24,13 @@ namespace MyGrum.Views
 
         bool test;
         bool isFirstLoad = true;
-        int kattID;
+        int katID;
 
         public GroceryPage(string pealkiri, bool kvst, int katID)
         {
             Title = pealkiri;
-            test = kvst;
-            kattID = katID;
+            this.test = kvst;
+            this.katID = katID;
 
             tap.Tapped += Tap_Tapped;
         }
@@ -39,20 +38,23 @@ namespace MyGrum.Views
         {
             Frame frm = (Frame)sender;
 
-            if (grid.Children.Last() == frm)
+            if (test)
             {
-                await Navigation.PushAsync(new AddingPage(test, frm.TabIndex, frm.TabIndex + 1));
+                if (grid.Children.Last() == frm)
+                {
+                    await Navigation.PushAsync(new AddingPage(test, frm.TabIndex, frm.TabIndex + 1));
+                }
+                else
+                {
+                    katID = frm.TabIndex;
+                    await Navigation.PushAsync(new GroceryPage(images[frm.TabIndex].AutomationId, false, frm.TabIndex + 1));
+                }              
             }
             else
             {
-                if (test)
+                if (grid.Children.Last() == frm)
                 {
-                    //if (tootedUheKategooriaga.Count > 1)
-                    //{
-                    //    tootedUheKategooriaga.RemoveRange(0, tootedUheKategooriaga.Count - 1);
-                    //}
-                    
-                    await Navigation.PushAsync(new GroceryPage(images[frm.TabIndex].AutomationId, false, frm.TabIndex + 1));
+                    await Navigation.PushAsync(new AddingPage(test, katID, katID));
                 }
                 else
                 {
@@ -63,11 +65,11 @@ namespace MyGrum.Views
                     else
                     {
                         frm.Opacity = 1;
-                        //Preferences.Set(frm.TabIndex.ToString(), images[frm.TabIndex].AutomationId);
-                        Preferences.Set("1", images[frm.TabIndex].AutomationId);
+                        Preferences.Set(frm.TabIndex.ToString(), images[frm.TabIndex].AutomationId);
+                        //Preferences.Set("1", images[frm.TabIndex].AutomationId);
                     }
                 }
-            }
+            }           
         }
         public void FileOutput(bool kvst)
         {
@@ -103,8 +105,7 @@ namespace MyGrum.Views
                     {
                         var columns = Andmed[i].Split(',');
                         Tooted toote = new Tooted(int.Parse(columns[0]), columns[1], columns[2], int.Parse(columns[3]));
-                        tooted.Add(toote);
-                        
+                        tooted.Add(toote);                        
                     }
                 }
             }
@@ -131,7 +132,6 @@ namespace MyGrum.Views
         }
         public void ProrisovkaStranitsi()
         {
-
             FileOutput(test);
 
             grid = new Grid
@@ -178,7 +178,7 @@ namespace MyGrum.Views
             {
                 foreach (var toote in tooted)
                 {
-                    if (toote.KategooriaID == kattID)
+                    if (toote.KategooriaID == katID)
                     {
                         tootedUheKategooriaga.Add(toote);
                     }
@@ -225,6 +225,5 @@ namespace MyGrum.Views
 
 /*
  * Переделать страницу в общий класс
- * При добавлении нового товара он помещается в первую категорию 
  * При добавления товара в список записывается только первый в списке
  */

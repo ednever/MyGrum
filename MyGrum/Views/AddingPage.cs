@@ -31,9 +31,11 @@ namespace MyGrum.Views
             tap.Tapped += Tap_Tapped;
 
             if (kvst)
-                Title = "Добавление категории";          
+                //Title = "Добавление категории";
+                Title = katID.ToString();
             else
-                Title = "Добавление товара";
+                //Title = "Добавление товара";
+                Title = katID.ToString();
 
             image = new Image { Source = ImageSource.FromFile("plus.png"), Aspect = Aspect.AspectFit };
             Frame frame = new Frame 
@@ -57,11 +59,8 @@ namespace MyGrum.Views
             StackLayout st = new StackLayout { Children = { frame, label, entry, st1 } };
             Content = st;
         }
-
         async void Tap_Tapped(object sender, EventArgs e)
         {
-            //SelectImageFromDevice();
-
             var pickResultTask = FilePicker.PickAsync(new PickOptions { FileTypes = FilePickerFileType.Images });
 
             await pickResultTask.ContinueWith(t =>
@@ -91,7 +90,6 @@ namespace MyGrum.Views
                 }
             });
         }
-
         async void Button_Clicked(object sender, EventArgs e)
         {
             if (kvst)
@@ -109,37 +107,6 @@ namespace MyGrum.Views
                 }
             }
             await Navigation.PopAsync();
-        }
-        async public void SelectImageFromDevice()
-        {
-            var pickResultTask = FilePicker.PickAsync(new PickOptions { FileTypes = FilePickerFileType.Images } );
-
-            await pickResultTask.ContinueWith(t =>
-            {
-                var pickResult = t.Result;
-
-                if (pickResult != null)
-                {
-                    // Сохранение изображения во внутреннее хранилище приложения
-                    var imagePath = Path.Combine(FileSystem.AppDataDirectory, pickResult.FileName);
-
-                    using (var stream = pickResult.OpenReadAsync().Result)
-                    {
-                        using (var fileStream = File.OpenWrite(imagePath))
-                        {
-                            stream.CopyToAsync(fileStream).Wait();
-                        }
-                    }
-
-                    // Отображение изображения в элементе управления Image
-                    Device.BeginInvokeOnMainThread(() =>
-                    {
-                        newImageName = pickResult.FileName;
-                        image.Source = ImageSource.FromFile(imagePath);
-                        image.Margin = -20;
-                    });
-                }
-            });
         }
     }
 }
