@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using Xamarin.Essentials;
+using System.Runtime.InteropServices.ComTypes;
 
 namespace MyGrum.Views
 {
@@ -77,8 +78,15 @@ namespace MyGrum.Views
             //File.Delete(Path.Combine(folderPath, fileNames[0]));
             //File.Delete(Path.Combine(folderPath, fileNames[1]));
             ////Создание файлов
-            //File.WriteAllText(Path.Combine(folderPath, fileNames[0]), "1,Овощи,vegetables.png"); //Категория
-            //File.WriteAllText(Path.Combine(folderPath, fileNames[1]), "1,Картофель,potato.png,1"); //Товар
+            if (File.Exists(Path.Combine(folderPath, fileNames[0])) == false)
+            {
+                File.WriteAllText(Path.Combine(folderPath, fileNames[0]), "1,Овощи,vegetables.png"); //Категория
+            }
+
+            if (File.Exists(Path.Combine(folderPath, fileNames[1])) == false)
+            {
+                File.WriteAllText(Path.Combine(folderPath, fileNames[1]), "1,Картофель,potato.png,1"); //Товар
+            }
 
             if (kvst)
             {
