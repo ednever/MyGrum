@@ -67,7 +67,6 @@ namespace MyGrum.Views
                     {
                         frm.Opacity = 1;
                         Preferences.Set(frm.TabIndex.ToString(), images[frm.TabIndex].AutomationId);
-                        //Preferences.Set("1", images[frm.TabIndex].AutomationId);
                     }
                 }
             }           

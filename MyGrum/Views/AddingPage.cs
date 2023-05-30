@@ -31,11 +31,9 @@ namespace MyGrum.Views
             tap.Tapped += Tap_Tapped;
 
             if (kvst)
-                //Title = "Добавление категории";
-                Title = katID.ToString();
+                Title = "Добавление категории";
             else
-                //Title = "Добавление товара";
-                Title = katID.ToString();
+                Title = "Добавление товара";
 
             image = new Image { Source = ImageSource.FromFile("plus.png"), Aspect = Aspect.AspectFit };
             Frame frame = new Frame 
