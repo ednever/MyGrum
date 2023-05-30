@@ -15,23 +15,14 @@ namespace MyGrum.Views
         string[] fileNames = { "Kategooriad.txt", "Tooted.txt" };
         string folderPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
         List<Tooted> tooted = new List<Tooted>();
-        Grid grid;
+        StackLayout st;
         public ListPage()
         {
             Title = "Список";
             label = new Label();
 
-            grid = new Grid
-            {
-                //VerticalOptions = LayoutOptions.Start,
-                ColumnDefinitions = new ColumnDefinitionCollection 
-                { 
-                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) }, 
-                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) }
-                },
-                Margin = 10
-            };
-            ScrollView scrollView = new ScrollView { Content = grid };
+            st = new StackLayout();
+            ScrollView scrollView = new ScrollView { Content = st };
             Content = scrollView;
         }
         protected override void OnAppearing()
@@ -55,12 +46,15 @@ namespace MyGrum.Views
             {
                 if (Preferences.ContainsKey(i.ToString()))
                 {
-                   
+                    StackLayout st1 = new StackLayout 
+                    { 
+                        Children = { new CheckBox(), new Label { Text = Preferences.Get(i.ToString(), "Pole andmed") } }, 
+                        Orientation = StackOrientation.Horizontal 
+                    };
+                    st.Children.Add(st1);
 
-                    grid.Children.Add(new CheckBox(), 0, i);
-                    grid.Children.Add(new Label { Text = Preferences.Get(i.ToString(), "Pole andmed") }, 1, i);
                     //label.Text += "\n" + Preferences.Get(i.ToString(), "Pole andmed");
-                    //Preferences.Clear();
+                    Preferences.Clear();
                 }
             }
 
