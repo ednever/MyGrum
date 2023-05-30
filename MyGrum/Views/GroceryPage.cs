@@ -62,11 +62,12 @@ namespace MyGrum.Views
                     if (frm.Opacity == 1)
                     {
                         frm.Opacity = 0.5;
+                        Preferences.Set(frm.TabIndex.ToString(), images[frm.TabIndex].AutomationId);
                     }
                     else
                     {
                         frm.Opacity = 1;
-                        Preferences.Set(frm.TabIndex.ToString(), images[frm.TabIndex].AutomationId);
+                        Preferences.Remove(frm.TabIndex.ToString());
                     }
                 }
             }           
@@ -232,4 +233,6 @@ namespace MyGrum.Views
 
 /*
  * Переделать страницу в общий класс
+ * При нажатии на товар в список передаётся только первый товар в этой категории
+ * Чтобы товар добавился в список необходимо посмотреть список
  */
