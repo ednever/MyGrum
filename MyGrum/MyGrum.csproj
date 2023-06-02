@@ -19,6 +19,8 @@
 
   <ItemGroup>
     <Compile Include="Models\Kategooriad.cs" />
+    <Compile Include="Models\Retseptid.cs" />
+    <Compile Include="Models\Soogiajad.cs" />
     <Compile Include="Models\Tooted.cs" />
   </ItemGroup>
 

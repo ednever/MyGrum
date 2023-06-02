@@ -11,7 +11,6 @@ namespace MyGrum.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class ListPage : ContentPage
     {
-        Label label;
         string[] fileNames = { "Kategooriad.txt", "Tooted.txt" };
         string folderPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
         List<Tooted> tooted = new List<Tooted>();
@@ -19,7 +18,6 @@ namespace MyGrum.Views
         public ListPage()
         {
             Title = "Список";
-            label = new Label();
 
             st = new StackLayout();
             ScrollView scrollView = new ScrollView { Content = st };

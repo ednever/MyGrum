@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using Xamarin.Essentials;
-using System.Runtime.InteropServices.ComTypes;
 
 namespace MyGrum.Views
 {
@@ -35,7 +34,7 @@ namespace MyGrum.Views
 
             tap.Tapped += Tap_Tapped;
         }
-        public async void Tap_Tapped(object sender, EventArgs e)
+        async void Tap_Tapped(object sender, EventArgs e)
         {
             Frame frm = (Frame)sender;
 
@@ -72,12 +71,12 @@ namespace MyGrum.Views
                 }
             }           
         }
-        public void FileOutput(bool kvst)
+        void FileOutput(bool kvst)
         {
             //Очистка файлов
             //File.Delete(Path.Combine(folderPath, fileNames[0]));
             //File.Delete(Path.Combine(folderPath, fileNames[1]));
-            ////Создание файлов
+
             if (File.Exists(Path.Combine(folderPath, fileNames[0])) == false)
             {
                 File.WriteAllText(Path.Combine(folderPath, fileNames[0]), "1,Овощи,vegetables.png"); //Категория
@@ -138,7 +137,7 @@ namespace MyGrum.Views
                 ProrisovkaStranitsi();
             }
         }
-        public void ProrisovkaStranitsi()
+        void ProrisovkaStranitsi()
         {
             FileOutput(test);
 

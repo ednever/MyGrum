@@ -44,7 +44,7 @@ namespace MyGrum.Views
                 HorizontalOptions = LayoutOptions.Center,
                 VerticalOptions = LayoutOptions.Center,
                 Margin = new Thickness(0,20,0,0),
-                Content = image 
+                Content = image
             };
             frame.GestureRecognizers.Add(tap);
         
@@ -59,6 +59,7 @@ namespace MyGrum.Views
         }
         async void Tap_Tapped(object sender, EventArgs e)
         {
+            Frame frm = (Frame)sender;
             var pickResultTask = FilePicker.PickAsync(new PickOptions { FileTypes = FilePickerFileType.Images });
 
             await pickResultTask.ContinueWith(t =>
@@ -83,32 +84,36 @@ namespace MyGrum.Views
                     {
                         newImageName = pickResult.FileName;
                         image.Source = ImageSource.FromFile(imagePath);
-                        image.Margin = -20;
+                        image.Margin = -19;
+                        image.Aspect = Aspect.AspectFill;
                     });
                 }
             });
         }
         async void Button_Clicked(object sender, EventArgs e)
         {
-            if (kvst)
+            if (string.IsNullOrWhiteSpace(entry.Text) || image.Aspect == Aspect.AspectFit)
             {
-                if (File.Exists(Path.Combine(folderPath, fileNames[0]))) //Категория
-                {
-                    File.AppendAllText(Path.Combine(folderPath, fileNames[0]), "\n" + num.ToString() + "," + entry.Text + "," + newImageName); //число,название,картинка
-                }
+                await DisplayAlert("Ошибка", "Заполните все поля!", "Ок");
             }
             else
             {
-                if (File.Exists(Path.Combine(folderPath, fileNames[1]))) //Товар
+                if (kvst)
                 {
-                    File.AppendAllText(Path.Combine(folderPath, fileNames[1]), "\n" + num.ToString() + "," + entry.Text + "," + newImageName + "," + katID); //число,название,картинка,категория                 
+                    if (File.Exists(Path.Combine(folderPath, fileNames[0]))) //Категория
+                    {
+                        File.AppendAllText(Path.Combine(folderPath, fileNames[0]), "\n" + num.ToString() + "," + entry.Text + "," + newImageName); //число,название,картинка
+                    }
                 }
+                else
+                {
+                    if (File.Exists(Path.Combine(folderPath, fileNames[1]))) //Товар
+                    {
+                        File.AppendAllText(Path.Combine(folderPath, fileNames[1]), "\n" + num.ToString() + "," + entry.Text + "," + newImageName + "," + katID); //число,название,картинка,категория                 
+                    }
+                }
+                await Navigation.PopAsync();
             }
-            await Navigation.PopAsync();
         }
     }
 }
-/**
- * Нужна проверка на заполненность 2 полей в кнопке сохранить
- * Изображения не всегда заполняют всё пространство
- */
