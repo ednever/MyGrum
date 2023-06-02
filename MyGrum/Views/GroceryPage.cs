@@ -42,7 +42,7 @@ namespace MyGrum.Views
             {
                 if (grid.Children.Last() == frm)
                 {
-                    await Navigation.PushAsync(new AddingPage(test, frm.TabIndex, frm.TabIndex + 1));
+                    await Navigation.PushAsync(new AddingPage(test, frm.TabIndex, frm.TabIndex + 1, false));
                 }
                 else
                 {
@@ -54,7 +54,7 @@ namespace MyGrum.Views
             {
                 if (grid.Children.Last() == frm)
                 {
-                    await Navigation.PushAsync(new AddingPage(test, katID, katID));
+                    await Navigation.PushAsync(new AddingPage(test, frm.TabIndex, katID, false));
                 }
                 else
                 {
@@ -170,11 +170,10 @@ namespace MyGrum.Views
                     {
                         TabIndex = i,
                         BorderColor = Color.Black,
-                        BackgroundColor = Color.Transparent,
                         CornerRadius = 15,
                         WidthRequest = 120,
                         HeightRequest = 80,
-                        Content = new StackLayout { Children = { image } }
+                        Content = image
                     };
                     frame.GestureRecognizers.Add(tap);
 
@@ -209,11 +208,12 @@ namespace MyGrum.Views
 
                     Frame frame = new Frame
                     {
+                        TabIndex = i,
                         BorderColor = Color.Black,
                         CornerRadius = 15,
                         WidthRequest = 120,
                         HeightRequest = 80,
-                        Content = new StackLayout { Children = { image } }
+                        Content = image 
                     };
                     frame.GestureRecognizers.Add(tap);
 
@@ -232,7 +232,6 @@ namespace MyGrum.Views
 
 /*
  * Переделать страницу в общий класс
- * При нажатии на товар в список передаётся только первый товар в этой категории
  * Чтобы товар добавился в список необходимо посмотреть список
  * Добавить кнопку как пользоваться приложением
  */
