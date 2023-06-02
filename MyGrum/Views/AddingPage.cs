@@ -105,80 +105,84 @@ namespace MyGrum.Views
         }
         async void Button_Clicked(object sender, EventArgs e)
         {
-            string polpo;
+            //string polpo;
             if (string.IsNullOrWhiteSpace(entry.Text) || image.Aspect == Aspect.AspectFit)
             {
                 await DisplayAlert("Ошибка", "Заполните все поля!", "Ок");
             }
             else
             {
-                //if (isPageRecipesPageOrGroceryPage)
-                //{
-                //    if (isPageInModeClassOrSubclass)
-                //    {
-                //        if (File.Exists(Path.Combine(folderPath, fileNames[2]))) //Приём пищи
-                //        {
-                //            File.AppendAllText(Path.Combine(folderPath, fileNames[2]), "\n" + num.ToString() + "," + entry.Text + "," + newImageName); //число,название,картинка
-                //        }
-                //    }
-                //    else
-                //    {
-                //        if (File.Exists(Path.Combine(folderPath, fileNames[3]))) //Рецепт
-                //        {
-                //            File.AppendAllText(Path.Combine(folderPath, fileNames[3]), "\n" + num.ToString() + "," + entry.Text + "," + newImageName + "," + classID + "," + "..."); //число,название,картинка,класс,описание                 
-                //        }
-                //    }
-                //}
-                //else 
-                //{                    
-                //    if (isPageInModeClassOrSubclass)
-                //    {
-                //        if (File.Exists(Path.Combine(folderPath, fileNames[0]))) //Категория
-                //        {
-                //            File.AppendAllText(Path.Combine(folderPath, fileNames[0]), "\n" + num.ToString() + "," + entry.Text + "," + newImageName); //число,название,картинка
-                //        }
-                //    }
-                //    else
-                //    {
-                //        if (File.Exists(Path.Combine(folderPath, fileNames[1]))) //Товар
-                //        {
-                //            File.AppendAllText(Path.Combine(folderPath, fileNames[1]), "\n" + num.ToString() + "," + entry.Text + "," + newImageName + "," + classID); //число,название,картинка,категория                 
-                //        }
-                //    }
-
-                //}
-
                 if (isPageRecipesPageOrGroceryPage)
                 {
                     if (isPageInModeClassOrSubclass)
                     {
-                        polpo = "\n" + num.ToString() + "," + entry.Text + "," + newImageName;
+                        if (File.Exists(Path.Combine(folderPath, fileNames[2]))) //Приём пищи
+                        {
+                            File.AppendAllText(Path.Combine(folderPath, fileNames[2]), "\n" + num.ToString() + "," + entry.Text + "," + newImageName); //число,название,картинка
+                        }
                     }
                     else
                     {
-                        polpo = "\n" + num.ToString() + "," + entry.Text + "," + newImageName + "," + classID + "," + "...";
+                        if (File.Exists(Path.Combine(folderPath, fileNames[3]))) //Рецепт
+                        {
+                            File.AppendAllText(Path.Combine(folderPath, fileNames[3]), "\n" + num.ToString() + "," + entry.Text + "," + newImageName + "," + classID + "," + "..."); //число,название,картинка,класс,описание                 
+                        }
                     }
                 }
                 else
                 {
                     if (isPageInModeClassOrSubclass)
                     {
-                        polpo = "\n" + num.ToString() + "," + entry.Text + "," + newImageName;
+                        if (File.Exists(Path.Combine(folderPath, fileNames[0]))) //Категория
+                        {
+                            File.AppendAllText(Path.Combine(folderPath, fileNames[0]), "\n" + num.ToString() + "," + entry.Text + "," + newImageName); //число,название,картинка
+                        }
                     }
                     else
                     {
-                        polpo = "\n" + num.ToString() + "," + entry.Text + "," + newImageName + "," + classID;
+                        if (File.Exists(Path.Combine(folderPath, fileNames[1]))) //Товар
+                        {
+                            File.AppendAllText(Path.Combine(folderPath, fileNames[1]), "\n" + num.ToString() + "," + entry.Text + "," + newImageName + "," + classID); //число,название,картинка,категория                 
+                        }
                     }
+
                 }
-                for (int i = 0; i < fileNames.Length; i++)
-                {
-                    if (File.Exists(Path.Combine(folderPath, fileNames[i])))
-                    {
-                        File.AppendAllText(Path.Combine(folderPath, fileNames[i]), polpo);
-                    }
-                }
-                await Navigation.PopAsync();
+
+                //if (isPageRecipesPageOrGroceryPage)
+                //{
+                //    if (isPageInModeClassOrSubclass)
+                //    {
+                //        polpo = "\n" + num.ToString() + "," + entry.Text + "," + newImageName;
+                //    }
+                //    else
+                //    {
+                //        polpo = "\n" + num.ToString() + "," + entry.Text + "," + newImageName + "," + classID + "," + "...";
+                //    }
+                //}
+                //else
+                //{
+                //    if (isPageInModeClassOrSubclass)
+                //    {
+                //        polpo = "\n" + num.ToString() + "," + entry.Text + "," + newImageName;
+                //    }
+                //    else
+                //    {
+                //        polpo = "\n" + num.ToString() + "," + entry.Text + "," + newImageName + "," + classID;
+                //    }
+                //}
+
+                //for (int i = 0; i < fileNames.Length; i++)
+                //{
+                //    if (File.Exists(Path.Combine(folderPath, fileNames[i])))
+                //    {
+                //        File.AppendAllText(Path.Combine(folderPath, fileNames[i]), polpo);
+                //    }
+                //}
+                //await Navigation.PopAsync();
             }
         }
     }
 }
+/*
+ * Оптимизировать страницу
+ */
