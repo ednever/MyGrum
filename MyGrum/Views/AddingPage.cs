@@ -1,12 +1,8 @@
 ﻿using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Text;
 using Xamarin.Forms.Xaml;
 using Xamarin.Forms;
 using Xamarin.Essentials;
-using MyGrum.Models;
-using System.Threading.Tasks;
 
 namespace MyGrum.Views
 {
@@ -17,8 +13,7 @@ namespace MyGrum.Views
         string folderPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
         Image image;
         Entry entry;
-        bool isPageInModeClassOrSubclass;
-        bool isPageRecipesPageOrGroceryPage;
+        bool isPageInModeClassOrSubclass, isPageRecipesPageOrGroceryPage;
         string newImageName;
         int num, classID;
 
@@ -48,7 +43,7 @@ namespace MyGrum.Views
             }
 
 
-            image = new Image { Source = ImageSource.FromFile("plus.png"), Aspect = Aspect.AspectFit };
+            image = new Image { Source = ImageSource.FromFile("plus.png") };
             Frame frame = new Frame 
             {
                 BorderColor = Color.Black,
@@ -62,7 +57,7 @@ namespace MyGrum.Views
             frame.GestureRecognizers.Add(tap);
         
             Label label = new Label { Text = "Название", FontSize = 25, FontAttributes = FontAttributes.Bold, Margin = new Thickness(20, 20, 0, 0) };
-            entry = new Entry { Placeholder = "Введите текст", Margin = new Thickness(20, 0, 20, 0) };
+            entry = new Entry { Placeholder = "Введите текст", Margin = new Thickness(20, 0, 20, 0), MaxLength = 20 };
             Button button = new Button { Text = "Сохранить", Margin = new Thickness(0,20,20,0) };
             button.Clicked += Button_Clicked;
 
@@ -104,85 +99,39 @@ namespace MyGrum.Views
             });
         }
         async void Button_Clicked(object sender, EventArgs e)
-        {
-            //string polpo;
+        {            
             if (string.IsNullOrWhiteSpace(entry.Text) || image.Aspect == Aspect.AspectFit)
             {
                 await DisplayAlert("Ошибка", "Заполните все поля!", "Ок");
             }
             else
             {
-                if (isPageRecipesPageOrGroceryPage)
-                {
-                    if (isPageInModeClassOrSubclass)
-                    {
-                        if (File.Exists(Path.Combine(folderPath, fileNames[2]))) //Приём пищи
-                        {
-                            File.AppendAllText(Path.Combine(folderPath, fileNames[2]), "\n" + num.ToString() + "," + entry.Text + "," + newImageName); //число,название,картинка
-                        }
-                    }
-                    else
-                    {
-                        if (File.Exists(Path.Combine(folderPath, fileNames[3]))) //Рецепт
-                        {
-                            File.AppendAllText(Path.Combine(folderPath, fileNames[3]), "\n" + num.ToString() + "," + entry.Text + "," + newImageName + "," + classID + "," + "..."); //число,название,картинка,класс,описание                 
-                        }
-                    }
-                }
-                else
-                {
-                    if (isPageInModeClassOrSubclass)
-                    {
-                        if (File.Exists(Path.Combine(folderPath, fileNames[0]))) //Категория
-                        {
-                            File.AppendAllText(Path.Combine(folderPath, fileNames[0]), "\n" + num.ToString() + "," + entry.Text + "," + newImageName); //число,название,картинка
-                        }
-                    }
-                    else
-                    {
-                        if (File.Exists(Path.Combine(folderPath, fileNames[1]))) //Товар
-                        {
-                            File.AppendAllText(Path.Combine(folderPath, fileNames[1]), "\n" + num.ToString() + "," + entry.Text + "," + newImageName + "," + classID); //число,название,картинка,категория                 
-                        }
-                    }
+                string textToFile = "\n" + num.ToString() + "," + entry.Text + "," + newImageName;
+                int fileNumber = 0;
 
+                if (isPageRecipesPageOrGroceryPage && isPageInModeClassOrSubclass)
+                {
+                    fileNumber = 2;
+                }
+                else if (isPageRecipesPageOrGroceryPage && !isPageInModeClassOrSubclass)
+                {
+                    fileNumber = 3;
+                    textToFile += "," + classID + "," + "...";
+                }
+                else if(!isPageRecipesPageOrGroceryPage && !isPageInModeClassOrSubclass)
+                {
+                    fileNumber = 1;
+                    textToFile += "," + classID;
                 }
 
-                //if (isPageRecipesPageOrGroceryPage)
-                //{
-                //    if (isPageInModeClassOrSubclass)
-                //    {
-                //        polpo = "\n" + num.ToString() + "," + entry.Text + "," + newImageName;
-                //    }
-                //    else
-                //    {
-                //        polpo = "\n" + num.ToString() + "," + entry.Text + "," + newImageName + "," + classID + "," + "...";
-                //    }
-                //}
-                //else
-                //{
-                //    if (isPageInModeClassOrSubclass)
-                //    {
-                //        polpo = "\n" + num.ToString() + "," + entry.Text + "," + newImageName;
-                //    }
-                //    else
-                //    {
-                //        polpo = "\n" + num.ToString() + "," + entry.Text + "," + newImageName + "," + classID;
-                //    }
-                //}
-
-                //for (int i = 0; i < fileNames.Length; i++)
-                //{
-                //    if (File.Exists(Path.Combine(folderPath, fileNames[i])))
-                //    {
-                //        File.AppendAllText(Path.Combine(folderPath, fileNames[i]), polpo);
-                //    }
-                //}
-                //await Navigation.PopAsync();
+                if (File.Exists(Path.Combine(folderPath, fileNames[fileNumber])))
+                    File.AppendAllText(Path.Combine(folderPath, fileNames[fileNumber]), textToFile);
+                
+                await Navigation.PopAsync();
             }
         }
     }
 }
 /*
- * Оптимизировать страницу
+ * Для развития проекта можно добавить обзор файлов не в проводнике, а в галереии
  */

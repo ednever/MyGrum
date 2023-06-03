@@ -21,6 +21,7 @@ namespace MyGrum.Views
         Grid grid;
         List<Image> images = new List<Image>();
         TapGestureRecognizer tap = new TapGestureRecognizer();
+        GestureRecognizer gestureRecognizer = new GestureRecognizer();
 
         bool test;
         bool isFirstLoad = true;
@@ -161,8 +162,7 @@ namespace MyGrum.Views
                         AutomationId = kategooriad[i].Kategooria,
                         Source = ImageSource.FromFile(Path.Combine(FileSystem.AppDataDirectory, kategooriad[i].Pilt)),
                         Aspect = Aspect.AspectFill,
-                        Margin = -19,
-                        HeightRequest = 118
+                        Margin = -19
                     };
                     images.Add(image);
 
@@ -171,11 +171,11 @@ namespace MyGrum.Views
                         TabIndex = i,
                         BorderColor = Color.Black,
                         CornerRadius = 15,
-                        WidthRequest = 120,
                         HeightRequest = 80,
                         Content = image
                     };
                     frame.GestureRecognizers.Add(tap);
+                    //frame.GestureRecognizers 
 
                     grid.Children.Add(frame, column, row);
                 }
@@ -201,8 +201,7 @@ namespace MyGrum.Views
                         AutomationId = tootedUheKategooriaga[i].Toote,
                         Source = ImageSource.FromFile(Path.Combine(FileSystem.AppDataDirectory, tootedUheKategooriaga[i].Pilt)),
                         Aspect = Aspect.AspectFill,
-                        Margin = -19,
-                        HeightRequest = 118
+                        Margin = -19
                     };
                     images.Add(image);
 
@@ -211,7 +210,6 @@ namespace MyGrum.Views
                         TabIndex = i,
                         BorderColor = Color.Black,
                         CornerRadius = 15,
-                        WidthRequest = 120,
                         HeightRequest = 80,
                         Content = image 
                     };
@@ -221,7 +219,6 @@ namespace MyGrum.Views
                 }
             }
 
-            images.Last().HeightRequest = 80;
             images.Last().Margin = 0;
 
             ScrollView scrollView = new ScrollView { Content = grid };
@@ -233,5 +230,5 @@ namespace MyGrum.Views
 /*
  * Переделать страницу в общий класс
  * Чтобы товар добавился в список необходимо посмотреть список
- * Добавить кнопку как пользоваться приложением
+ * 
  */

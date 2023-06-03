@@ -58,7 +58,7 @@ namespace MyGrum.Views
                 }
                 else
                 {
-                    await Navigation.PushAsync(new RecipeDescriptionPage());
+                    await Navigation.PushAsync(new RecipeDescriptionPage(images[frm.TabIndex].AutomationId, images[frm.TabIndex].Source));
                 }
             }
         }
@@ -136,24 +136,23 @@ namespace MyGrum.Views
             {
                 VerticalOptions = LayoutOptions.Start,
                 RowDefinitions = new RowDefinitionCollection { new RowDefinition() },
-                ColumnDefinitions = new ColumnDefinitionCollection { new ColumnDefinition(), new ColumnDefinition(), new ColumnDefinition() },
-                Margin = 10
+                ColumnDefinitions = new ColumnDefinitionCollection { new ColumnDefinition(), new ColumnDefinition() },
+                Margin = 20
             };
 
             if (isPageInModeSoogiajad)
             {
                 for (int i = 0; i < soogiajad.Count; i++)
                 {
-                    int row = i / 3;
-                    int column = i % 3;
+                    int row = i / 2;
+                    int column = i % 2;
 
                     Image image = new Image
                     {
                         AutomationId = soogiajad[i].Soogiaeg,
                         Source = ImageSource.FromFile(Path.Combine(FileSystem.AppDataDirectory, soogiajad[i].Pilt)),
                         Aspect = Aspect.AspectFill,
-                        Margin = -19,
-                        HeightRequest = 118
+                        Margin = -19
                     };
                     images.Add(image);
 
@@ -161,9 +160,9 @@ namespace MyGrum.Views
                     {
                         TabIndex = i,
                         BorderColor = Color.Black,
-                        CornerRadius = 15,
-                        WidthRequest = 120,
-                        HeightRequest = 80,
+                        CornerRadius = 30,
+                        HeightRequest = 140,
+                        Margin = new Thickness(5,10,5,10),
                         Content = image
                     };
                     frame.GestureRecognizers.Add(tap);
@@ -184,16 +183,15 @@ namespace MyGrum.Views
 
                 for (int i = 0; i < retseptidUhesSoogiajas.Count; i++)
                 {
-                    int row = i / 3;
-                    int column = i % 3;
+                    int row = i / 2;
+                    int column = i % 2;
 
                     Image image = new Image
                     {
                         AutomationId = retseptidUhesSoogiajas[i].Retsept,
                         Source = ImageSource.FromFile(Path.Combine(FileSystem.AppDataDirectory, retseptidUhesSoogiajas[i].Pilt)),
                         Aspect = Aspect.AspectFill,
-                        Margin = -19,
-                        HeightRequest = 118
+                        Margin = -19
                     };
                     images.Add(image);
 
@@ -201,9 +199,9 @@ namespace MyGrum.Views
                     {
                         TabIndex = i,
                         BorderColor = Color.Black,
-                        CornerRadius = 15,
-                        WidthRequest = 120,
-                        HeightRequest = 80,
+                        CornerRadius = 30,
+                        HeightRequest = 140,
+                        Margin = new Thickness(5, 10, 5, 10),
                         Content = image
                     };
                     frame.GestureRecognizers.Add(tap);
@@ -211,8 +209,6 @@ namespace MyGrum.Views
                     grid.Children.Add(frame, column, row);
                 }
             }
-
-            images.Last().HeightRequest = 80;
             images.Last().Margin = 0;
 
             ScrollView scrollView = new ScrollView { Content = grid };
@@ -221,7 +217,6 @@ namespace MyGrum.Views
     }
 }
 /*
- * Сделать таблицу с приёмами пищи и рецептами по 2 колонки в ряде
  * У картинки должна быть чёрная немного прозрачная линия с названием картинки
  * Переход на страницу с описанием рецепта
  */
