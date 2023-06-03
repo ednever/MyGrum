@@ -21,7 +21,10 @@ namespace MyGrum.Views
         Grid grid;
         List<Image> images = new List<Image>();
         TapGestureRecognizer tap = new TapGestureRecognizer();
-        GestureRecognizer gestureRecognizer = new GestureRecognizer();
+        PinchGestureRecognizer pinch = new PinchGestureRecognizer();
+
+        DateTime lastTapTime = DateTime.MinValue;
+        const int DoubleTapMilliseconds = 300;
 
         bool test;
         bool isFirstLoad = true;
@@ -34,6 +37,7 @@ namespace MyGrum.Views
             this.katID = katID;
 
             tap.Tapped += Tap_Tapped;
+            pinch.PinchUpdated += OnPinchUpdated;
         }
         async void Tap_Tapped(object sender, EventArgs e)
         {
@@ -141,7 +145,6 @@ namespace MyGrum.Views
         void ProrisovkaStranitsi()
         {
             FileOutput(test);
-
             grid = new Grid
             {
                 VerticalOptions = LayoutOptions.Start,
@@ -175,7 +178,8 @@ namespace MyGrum.Views
                         Content = image
                     };
                     frame.GestureRecognizers.Add(tap);
-                    //frame.GestureRecognizers 
+                    frame.GestureRecognizers.Add(pinch);
+
 
                     grid.Children.Add(frame, column, row);
                 }
@@ -214,6 +218,7 @@ namespace MyGrum.Views
                         Content = image 
                     };
                     frame.GestureRecognizers.Add(tap);
+                    frame.GestureRecognizers.Add(pinch);
 
                     grid.Children.Add(frame, column, row);
                 }
@@ -223,6 +228,28 @@ namespace MyGrum.Views
 
             ScrollView scrollView = new ScrollView { Content = grid };
             Content = scrollView;
+        }
+        async void OnPinchUpdated(object sender, PinchGestureUpdatedEventArgs e)
+        {
+            Frame frm = (Frame)sender;
+            if (e.Status == GestureStatus.Completed)
+            {
+                if (grid.Children.Last() == frm)
+                    return;
+                
+                if (DateTime.Now - lastTapTime < TimeSpan.FromMilliseconds(DoubleTapMilliseconds))
+                {
+                    if (test)
+                    {
+                        await Navigation.PushAsync(new UpdatingPage(images[frm.TabIndex].AutomationId, images[frm.TabIndex].Source, test, frm.TabIndex, frm.TabIndex + 1, false));
+                    }
+                    else
+                    {
+                        await Navigation.PushAsync(new UpdatingPage(images[frm.TabIndex].AutomationId, images[frm.TabIndex].Source, test, frm.TabIndex, katID, false));
+                    }                    
+                }                                   
+                lastTapTime = DateTime.Now;
+            }
         }
     }
 }
