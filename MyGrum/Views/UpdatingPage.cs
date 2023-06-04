@@ -3,6 +3,8 @@ using System.IO;
 using Xamarin.Forms.Xaml;
 using Xamarin.Forms;
 using Xamarin.Essentials;
+using System.Collections.Generic;
+using MyGrum.Models;
 
 namespace MyGrum.Views
 {
@@ -55,10 +57,17 @@ namespace MyGrum.Views
                 Margin = new Thickness(20, 0, 20, 0), 
                 MaxLength = 20 
             };
-            Button button = new Button { Text = "Сохранить", Margin = new Thickness(0, 20, 20, 0) };
-            button.Clicked += Button_Clicked;
+            Button buttonSave = new Button { Text = "Сохранить", Margin = new Thickness(0, 20, 20, 0) };
+            Button buttonDelete = new Button { Text = "Удалить", Margin = new Thickness(0, 20, 5, 0) };
+            buttonSave.Clicked += Button_Clicked;
+            buttonDelete.Clicked += Button_Clicked;
 
-            StackLayout st1 = new StackLayout { HorizontalOptions = LayoutOptions.End, Children = { button } };
+            StackLayout st1 = new StackLayout 
+            { 
+                Orientation = StackOrientation.Horizontal, 
+                HorizontalOptions = LayoutOptions.End, 
+                Children = { buttonDelete, buttonSave } 
+            };
             StackLayout st = new StackLayout { Children = { frame, label, entry, st1 } };
             Content = st;
         }
@@ -94,38 +103,142 @@ namespace MyGrum.Views
         }
         async void Button_Clicked(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(entry.Text))
+            Button btn = (Button)sender;
+            if (btn.Text == "Удалить") 
             {
-                await DisplayAlert("Ошибка", "Заполните все поля!", "Ок");
+                bool result = await DisplayAlert("Уведомление", "Вы действительно желаете удалить?", "Нет", "Да");
+
+                if (result)
+                {
+                    return;
+                }
+                else
+                {
+                    string textToFile = (num + 1).ToString() + "," + entry.Text + "," + Path.GetFileName(image.Source.ToString());
+                    int fileNumber = 0;
+
+                    if (isPageRecipesPageOrGroceryPage && isPageInModeClassOrSubclass)
+                    {
+                        fileNumber = 2;
+                    }
+                    else if (isPageRecipesPageOrGroceryPage && !isPageInModeClassOrSubclass)
+                    {
+                        fileNumber = 3;
+                        textToFile += "," + classID.ToString() + "," + "...";
+                    }
+                    else if (!isPageRecipesPageOrGroceryPage && !isPageInModeClassOrSubclass)
+                    {
+                        fileNumber = 1;
+                        textToFile += "," + classID.ToString();
+                    }
+
+                    string[] lines = File.ReadAllLines(Path.Combine(folderPath, fileNames[fileNumber]));
+                    List<string> abiLinesList = new List<string>();
+                    foreach (var item in lines)
+                    {
+                        abiLinesList.Add(item);
+                    }
+
+                    for (int i = 0; i < abiLinesList.Count; i++)
+                    {
+                        var columns = abiLinesList[i].Split(',');
+                        if (!isPageInModeClassOrSubclass)
+                        {
+                            if (columns[0] == (num + 1).ToString() && columns[3] == classID.ToString())
+                                abiLinesList.Remove(textToFile);                           
+                        }
+                        else
+                        {
+                            if (columns[0] == (num + 1).ToString())
+                                abiLinesList.Remove(textToFile);
+                            
+                        }
+                    }
+                    string[] newlines = abiLinesList.ToArray();
+
+                    string testqa = ""; //Проверка
+                    foreach (var item in newlines)
+                    {
+                        testqa += "\n" + item;
+                    }
+                    await DisplayAlert("Ошибка", testqa, "Ок");
+
+                    if (File.Exists(Path.Combine(folderPath, fileNames[fileNumber])))
+                        File.WriteAllLines(Path.Combine(folderPath, fileNames[fileNumber]), newlines);
+
+                    await Navigation.PopAsync();
+                }
             }
             else
             {
-                string textToFile = "\n" + num.ToString() + "," + entry.Text + "," + Path.GetFileName(image.Source.ToString());
-                int fileNumber = 0;
-
-                if (isPageRecipesPageOrGroceryPage && isPageInModeClassOrSubclass)
+                if (string.IsNullOrWhiteSpace(entry.Text))
                 {
-                    fileNumber = 2;
+                    await DisplayAlert("Ошибка", "Заполните все поля!", "Ок");
                 }
-                else if (isPageRecipesPageOrGroceryPage && !isPageInModeClassOrSubclass)
+                else
                 {
-                    fileNumber = 3;
-                    textToFile += "," + classID.ToString() + "," + "...";
+                    int fileNumber = 0;
+
+                    string[] jamal = File.ReadAllLines(Path.Combine(folderPath, fileNames[fileNumber]));
+                    for (int i = 0; i < jamal.Length; i++)
+                    {
+                        var columns = jamal[i].Split(',');
+                        
+                    }
+
+                    string textToFile = (num + 1).ToString() + "," + entry.Text + "," + Path.GetFileName(image.Source.ToString());
+                    
+
+                    if (isPageRecipesPageOrGroceryPage && isPageInModeClassOrSubclass)
+                    {
+                        fileNumber = 2;
+                    }
+                    else if (isPageRecipesPageOrGroceryPage && !isPageInModeClassOrSubclass)
+                    {
+                        fileNumber = 3;
+                        textToFile += "," + classID.ToString() + "," + "...";
+                    }
+                    else if (!isPageRecipesPageOrGroceryPage && !isPageInModeClassOrSubclass)
+                    {
+                        fileNumber = 1;
+                        textToFile += "," + classID.ToString();
+                    }
+
+                    string[] lines = File.ReadAllLines(Path.Combine(folderPath, fileNames[fileNumber]));
+                    if (!isPageInModeClassOrSubclass)
+                    {
+                        for (int i = 0; i < lines.Length; i++)
+                        {
+                            var columns = lines[i].Split(',');
+                            if (columns[0] == (num + 1).ToString() && columns[3] == classID.ToString())
+                            {
+                                lines[i] = textToFile;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        lines[num] = textToFile;
+                    }
+
+                    string test = ""; //Проверка
+                    foreach (var item in lines)
+                    {
+                        test += "\n" + item;
+                    }
+                    await DisplayAlert("Ошибка", test, "Ок");
+
+                    if (File.Exists(Path.Combine(folderPath, fileNames[fileNumber])))
+                        File.WriteAllLines(Path.Combine(folderPath, fileNames[fileNumber]), lines);
+
+                    await Navigation.PopAsync();
                 }
-                else if (!isPageRecipesPageOrGroceryPage && !isPageInModeClassOrSubclass)
-                {
-                    fileNumber = 1;
-                    textToFile += "," + classID.ToString();
-                }
-
-
-
-                string[] lines = File.ReadAllLines(Path.Combine(folderPath, fileNames[fileNumber]));
-                lines[num] = textToFile;
-                //File.WriteAllLines(Path.Combine(folderPath, fileNames[fileNumber]), lines);
-
-                await Navigation.PopAsync();
-            }
+            }           
         }
     }
 }
+/*
+ * Нужно сделать если удаляется категория, то удаляются и все её товары
+ * Проблема: ID объекта обновляется в зависимости от расположения объекта в таблице. Из-за этого товары удалённой категории >>>
+ * переходят к следущей категории по списку. Из-за этого может появиться категория с таким же ID
+ */

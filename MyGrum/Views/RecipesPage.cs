@@ -21,6 +21,10 @@ namespace MyGrum.Views
         Grid grid;
         List<Image> images = new List<Image>();
         TapGestureRecognizer tap = new TapGestureRecognizer();
+        PinchGestureRecognizer pinch = new PinchGestureRecognizer();
+
+        DateTime lastTapTime = DateTime.MinValue;
+        const int DoubleTapMilliseconds = 300;
 
         bool isPageInModeSoogiajad;
         bool isFirstLoad = true;
@@ -33,6 +37,7 @@ namespace MyGrum.Views
             this.soogiaegID = soogiaegID;
 
             tap.Tapped += Tap_Tapped;
+            pinch.PinchUpdated += OnPinchUpdated;
         }
         async void Tap_Tapped(object sender, EventArgs e)
         {
@@ -166,6 +171,7 @@ namespace MyGrum.Views
                         Content = image
                     };
                     frame.GestureRecognizers.Add(tap);
+                    frame.GestureRecognizers.Add(pinch);
 
                     grid.Children.Add(frame, column, row);
                 }
@@ -205,6 +211,7 @@ namespace MyGrum.Views
                         Content = image
                     };
                     frame.GestureRecognizers.Add(tap);
+                    frame.GestureRecognizers.Add(pinch);
 
                     grid.Children.Add(frame, column, row);
                 }
@@ -213,6 +220,28 @@ namespace MyGrum.Views
 
             ScrollView scrollView = new ScrollView { Content = grid };
             Content = scrollView;
+        }
+        async void OnPinchUpdated(object sender, PinchGestureUpdatedEventArgs e)
+        {
+            Frame frm = (Frame)sender;
+            if (e.Status == GestureStatus.Completed)
+            {
+                if (grid.Children.Last() == frm)
+                    return;
+
+                if (DateTime.Now - lastTapTime < TimeSpan.FromMilliseconds(DoubleTapMilliseconds))
+                {
+                    if (isPageInModeSoogiajad)
+                    {
+                        await Navigation.PushAsync(new UpdatingPage(images[frm.TabIndex].AutomationId, images[frm.TabIndex].Source, isPageInModeSoogiajad, frm.TabIndex, frm.TabIndex + 1, true));
+                    }
+                    else
+                    {
+                        await Navigation.PushAsync(new UpdatingPage(images[frm.TabIndex].AutomationId, images[frm.TabIndex].Source, isPageInModeSoogiajad, frm.TabIndex, soogiaegID, true));
+                    }
+                }
+                lastTapTime = DateTime.Now;
+            }
         }
     }
 }

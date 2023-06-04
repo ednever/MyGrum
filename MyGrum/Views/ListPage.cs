@@ -19,8 +19,13 @@ namespace MyGrum.Views
         {
             Title = "Список";
 
-            st = new StackLayout();
-            ScrollView scrollView = new ScrollView { Content = st };
+            st = new StackLayout { Margin = new Thickness(20, 20, 0, 0) };
+            StackLayout st1 = new StackLayout { 
+                Children = { new Button { Text = "Очистить список", Margin = new Thickness(0,0,20,20) } },
+                HorizontalOptions = LayoutOptions.End
+            };
+            StackLayout st2 = new StackLayout { Children = { st, st1 } };
+            ScrollView scrollView = new ScrollView { Content = st2 };
             Content = scrollView;
         }
         protected override void OnAppearing()
@@ -46,7 +51,7 @@ namespace MyGrum.Views
                 {
                     StackLayout st1 = new StackLayout 
                     { 
-                        Children = { new CheckBox(), new Label { Text = Preferences.Get(i.ToString(), "Pole andmed") } }, 
+                        Children = { new CheckBox(), new Label { Text = Preferences.Get(i.ToString(), "Pole andmed"), Margin = new Thickness(0,5,0,0) } }, 
                         Orientation = StackOrientation.Horizontal 
                     };
                     st.Children.Add(st1);
@@ -55,11 +60,6 @@ namespace MyGrum.Views
                     Preferences.Clear();
                 }
             }
-
-            
-            //Preferences.
-                     
         }
     }  
 }
-//дочинить отображение списка

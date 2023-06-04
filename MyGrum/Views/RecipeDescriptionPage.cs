@@ -35,7 +35,8 @@ namespace MyGrum.Views
             Label vajalikudTooted = new Label
             {
                 Margin = new Thickness(0, 20, 0, 0),
-                FontSize = 16,               
+                FontSize = 16,   
+                Text = "Овсяные хлопья - 200 г\r\nИзюм - 1 ст. л.\r\nОрехи - 1 ст. л.\r\nКорица - добавить по вкусу\r\nБанан - 1 шт\r\nМёд - 1 ст. л.\r\nГорячая вода - 100 мл"
             };
             Label pealkiri2_2 = new Label
             {

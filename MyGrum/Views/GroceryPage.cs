@@ -82,12 +82,12 @@ namespace MyGrum.Views
             //File.Delete(Path.Combine(folderPath, fileNames[0]));
             //File.Delete(Path.Combine(folderPath, fileNames[1]));
 
-            if (File.Exists(Path.Combine(folderPath, fileNames[0])) == false)
+            if (!File.Exists(Path.Combine(folderPath, fileNames[0])))
             {
                 File.WriteAllText(Path.Combine(folderPath, fileNames[0]), "1,Овощи,vegetables.png"); //Категория
             }
 
-            if (File.Exists(Path.Combine(folderPath, fileNames[1])) == false)
+            if (!File.Exists(Path.Combine(folderPath, fileNames[1])))
             {
                 File.WriteAllText(Path.Combine(folderPath, fileNames[1]), "1,Картофель,potato.png,1"); //Товар
             }
@@ -180,7 +180,6 @@ namespace MyGrum.Views
                     frame.GestureRecognizers.Add(tap);
                     frame.GestureRecognizers.Add(pinch);
 
-
                     grid.Children.Add(frame, column, row);
                 }
             }
@@ -257,5 +256,4 @@ namespace MyGrum.Views
 /*
  * Переделать страницу в общий класс
  * Чтобы товар добавился в список необходимо посмотреть список
- * 
  */

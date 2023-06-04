@@ -3,6 +3,7 @@ using System.IO;
 using Xamarin.Forms.Xaml;
 using Xamarin.Forms;
 using Xamarin.Essentials;
+using System.Collections.Generic;
 
 namespace MyGrum.Views
 {
@@ -104,7 +105,7 @@ namespace MyGrum.Views
             }
             else
             {
-                string textToFile = "\n" + num.ToString() + "," + entry.Text + "," + Path.GetFileName(image.Source.ToString());
+                string textToFile = (num + 1).ToString() + "," + entry.Text + "," + Path.GetFileName(image.Source.ToString());
                 int fileNumber = 0;
 
                 if (isPageRecipesPageOrGroceryPage && isPageInModeClassOrSubclass)
@@ -122,9 +123,18 @@ namespace MyGrum.Views
                     textToFile += "," + classID.ToString();
                 }
 
+                string[] lines = File.ReadAllLines(Path.Combine(folderPath, fileNames[fileNumber]));
+                List<string> test = new List<string>();
+                foreach (var item in lines)
+                {
+                    test.Add(item);
+                }
+                test.Add(textToFile);
+                string[] newlines = test.ToArray();
+
                 if (File.Exists(Path.Combine(folderPath, fileNames[fileNumber])))
-                    File.AppendAllText(Path.Combine(folderPath, fileNames[fileNumber]), textToFile);
-                
+                    File.WriteAllLines(Path.Combine(folderPath, fileNames[fileNumber]), newlines);
+
                 await Navigation.PopAsync();
             }
         }
