@@ -114,7 +114,7 @@ namespace MyGrum.Views
                 }
                 else
                 {
-                    string textToFile = (num + 1).ToString() + "," + entry.Text + "," + Path.GetFileName(image.Source.ToString());
+                    string textToFile = num.ToString() + "," + entry.Text + "," + Path.GetFileName(image.Source.ToString());
                     int fileNumber = 0;
 
                     if (isPageRecipesPageOrGroceryPage && isPageInModeClassOrSubclass)
@@ -124,7 +124,7 @@ namespace MyGrum.Views
                     else if (isPageRecipesPageOrGroceryPage && !isPageInModeClassOrSubclass)
                     {
                         fileNumber = 3;
-                        textToFile += "," + classID.ToString() + "," + "...";
+                        textToFile += "," + classID.ToString() + "," + "...,...";
                     }
                     else if (!isPageRecipesPageOrGroceryPage && !isPageInModeClassOrSubclass)
                     {
@@ -133,6 +133,7 @@ namespace MyGrum.Views
                     }
 
                     string[] lines = File.ReadAllLines(Path.Combine(folderPath, fileNames[fileNumber]));
+                    
                     List<string> abiLinesList = new List<string>();
                     foreach (var item in lines)
                     {
@@ -144,14 +145,50 @@ namespace MyGrum.Views
                         var columns = abiLinesList[i].Split(',');
                         if (!isPageInModeClassOrSubclass)
                         {
-                            if (columns[0] == (num + 1).ToString() && columns[3] == classID.ToString())
+                            if (columns[0] == num.ToString() && columns[3] == classID.ToString())
                                 abiLinesList.Remove(textToFile);                           
                         }
                         else
                         {
-                            if (columns[0] == (num + 1).ToString())
+                            if (columns[0] == num.ToString())
+                            {
                                 abiLinesList.Remove(textToFile);
-                            
+
+                                if (isPageRecipesPageOrGroceryPage)
+                                {
+                                    string[] linesRetseptid = File.ReadAllLines(Path.Combine(folderPath, fileNames[3]));
+                                    List<string> abiLinesRetseptidList = new List<string>();
+                                    foreach (var item in linesRetseptid)
+                                    {
+                                        abiLinesRetseptidList.Add(item);
+                                    }
+                                    for (int j = 0; j < abiLinesRetseptidList.Count; j++)
+                                    {
+                                        var columnsRetseptid = abiLinesRetseptidList[j].Split(',');
+                                        if (columnsRetseptid[3] == num.ToString())
+                                            abiLinesRetseptidList.Remove(abiLinesRetseptidList[j]);
+                                    }
+                                    string[] newlinesRetseptid = abiLinesRetseptidList.ToArray();
+                                    File.WriteAllLines(Path.Combine(folderPath, fileNames[3]), newlinesRetseptid);
+                                }
+                                else
+                                {
+                                    string[] linesRetseptid = File.ReadAllLines(Path.Combine(folderPath, fileNames[1]));
+                                    List<string> abiLinesRetseptidList = new List<string>();
+                                    foreach (var item in linesRetseptid)
+                                    {
+                                        abiLinesRetseptidList.Add(item);
+                                    }
+                                    for (int j = 0; j < abiLinesRetseptidList.Count; j++)
+                                    {
+                                        var columnsRetseptid = abiLinesRetseptidList[j].Split(',');
+                                        if (columnsRetseptid[3] == num.ToString())
+                                            abiLinesRetseptidList.Remove(abiLinesRetseptidList[j]);
+                                    }
+                                    string[] newlinesRetseptid = abiLinesRetseptidList.ToArray();
+                                    File.WriteAllLines(Path.Combine(folderPath, fileNames[1]), newlinesRetseptid);
+                                }
+                            }                                                          
                         }
                     }
                     string[] newlines = abiLinesList.ToArray();
@@ -163,9 +200,7 @@ namespace MyGrum.Views
                     }
                     await DisplayAlert("Ошибка", testqa, "Ок");
 
-                    if (File.Exists(Path.Combine(folderPath, fileNames[fileNumber])))
-                        File.WriteAllLines(Path.Combine(folderPath, fileNames[fileNumber]), newlines);
-
+                    File.WriteAllLines(Path.Combine(folderPath, fileNames[fileNumber]), newlines);
                     await Navigation.PopAsync();
                 }
             }
@@ -178,17 +213,8 @@ namespace MyGrum.Views
                 else
                 {
                     int fileNumber = 0;
-
-                    string[] jamal = File.ReadAllLines(Path.Combine(folderPath, fileNames[fileNumber]));
-                    for (int i = 0; i < jamal.Length; i++)
-                    {
-                        var columns = jamal[i].Split(',');
-                        
-                    }
-
-                    string textToFile = (num + 1).ToString() + "," + entry.Text + "," + Path.GetFileName(image.Source.ToString());
+                    string textToFile = num.ToString() + "," + entry.Text + "," + Path.GetFileName(image.Source.ToString());
                     
-
                     if (isPageRecipesPageOrGroceryPage && isPageInModeClassOrSubclass)
                     {
                         fileNumber = 2;
@@ -196,7 +222,7 @@ namespace MyGrum.Views
                     else if (isPageRecipesPageOrGroceryPage && !isPageInModeClassOrSubclass)
                     {
                         fileNumber = 3;
-                        textToFile += "," + classID.ToString() + "," + "...";
+                        textToFile += "," + classID.ToString() + "," + "...,..."; //подумать можно
                     }
                     else if (!isPageRecipesPageOrGroceryPage && !isPageInModeClassOrSubclass)
                     {
@@ -210,7 +236,7 @@ namespace MyGrum.Views
                         for (int i = 0; i < lines.Length; i++)
                         {
                             var columns = lines[i].Split(',');
-                            if (columns[0] == (num + 1).ToString() && columns[3] == classID.ToString())
+                            if (columns[0] == num.ToString() && columns[3] == classID.ToString())
                             {
                                 lines[i] = textToFile;
                             }
@@ -218,15 +244,15 @@ namespace MyGrum.Views
                     }
                     else
                     {
-                        lines[num] = textToFile;
+                        lines[num - 1] = textToFile;
                     }
 
-                    string test = ""; //Проверка
+                    string testqa = ""; //Проверка
                     foreach (var item in lines)
                     {
-                        test += "\n" + item;
+                        testqa += "\n" + item;
                     }
-                    await DisplayAlert("Ошибка", test, "Ок");
+                    await DisplayAlert("Ошибка", testqa, "Ок");
 
                     if (File.Exists(Path.Combine(folderPath, fileNames[fileNumber])))
                         File.WriteAllLines(Path.Combine(folderPath, fileNames[fileNumber]), lines);
@@ -238,7 +264,5 @@ namespace MyGrum.Views
     }
 }
 /*
- * Нужно сделать если удаляется категория, то удаляются и все её товары
- * Проблема: ID объекта обновляется в зависимости от расположения объекта в таблице. Из-за этого товары удалённой категории >>>
- * переходят к следущей категории по списку. Из-за этого может появиться категория с таким же ID
+ * Обновлять рецепт с его описанием
  */

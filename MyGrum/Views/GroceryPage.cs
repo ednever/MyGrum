@@ -47,19 +47,25 @@ namespace MyGrum.Views
             {
                 if (grid.Children.Last() == frm)
                 {
-                    await Navigation.PushAsync(new AddingPage(test, frm.TabIndex, frm.TabIndex + 1, false));
+                    if (frm.TabIndex == 0)
+                        await Navigation.PushAsync(new AddingPage(test, 0, 0, false));                    
+                    else
+                        await Navigation.PushAsync(new AddingPage(test, kategooriad[frm.TabIndex - 1].KategooriaID, 0, false));                                        
                 }
                 else
                 {
                     katID = frm.TabIndex;
-                    await Navigation.PushAsync(new GroceryPage(images[frm.TabIndex].AutomationId, false, frm.TabIndex + 1));
+                    await Navigation.PushAsync(new GroceryPage(images[frm.TabIndex].AutomationId, false, kategooriad[frm.TabIndex].KategooriaID));
                 }              
             }
             else
             {
                 if (grid.Children.Last() == frm)
                 {
-                    await Navigation.PushAsync(new AddingPage(test, frm.TabIndex, katID, false));
+                    if (frm.TabIndex == 0)
+                        await Navigation.PushAsync(new AddingPage(test, 0, katID, false));
+                    else
+                        await Navigation.PushAsync(new AddingPage(test, tooted[frm.TabIndex - 1].TooteID, katID, false));
                 }
                 else
                 {
@@ -83,14 +89,12 @@ namespace MyGrum.Views
             //File.Delete(Path.Combine(folderPath, fileNames[1]));
 
             if (!File.Exists(Path.Combine(folderPath, fileNames[0])))
-            {
                 File.WriteAllText(Path.Combine(folderPath, fileNames[0]), "1,Овощи,vegetables.png"); //Категория
-            }
+            
 
             if (!File.Exists(Path.Combine(folderPath, fileNames[1])))
-            {
                 File.WriteAllText(Path.Combine(folderPath, fileNames[1]), "1,Картофель,potato.png,1"); //Товар
-            }
+            
 
             if (kvst)
             {
@@ -175,10 +179,9 @@ namespace MyGrum.Views
                         BorderColor = Color.Black,
                         CornerRadius = 15,
                         HeightRequest = 80,
-                        Content = image
+                        Content = image,
+                        GestureRecognizers = { tap, pinch }
                     };
-                    frame.GestureRecognizers.Add(tap);
-                    frame.GestureRecognizers.Add(pinch);
 
                     grid.Children.Add(frame, column, row);
                 }
@@ -214,10 +217,9 @@ namespace MyGrum.Views
                         BorderColor = Color.Black,
                         CornerRadius = 15,
                         HeightRequest = 80,
-                        Content = image 
+                        Content = image,
+                        GestureRecognizers = { tap, pinch }
                     };
-                    frame.GestureRecognizers.Add(tap);
-                    frame.GestureRecognizers.Add(pinch);
 
                     grid.Children.Add(frame, column, row);
                 }
@@ -239,13 +241,9 @@ namespace MyGrum.Views
                 if (DateTime.Now - lastTapTime < TimeSpan.FromMilliseconds(DoubleTapMilliseconds))
                 {
                     if (test)
-                    {
-                        await Navigation.PushAsync(new UpdatingPage(images[frm.TabIndex].AutomationId, images[frm.TabIndex].Source, test, frm.TabIndex, frm.TabIndex + 1, false));
-                    }
+                        await Navigation.PushAsync(new UpdatingPage(kategooriad[frm.TabIndex].Kategooria, images[frm.TabIndex].Source, test, kategooriad[frm.TabIndex].KategooriaID, 0, false));                    
                     else
-                    {
-                        await Navigation.PushAsync(new UpdatingPage(images[frm.TabIndex].AutomationId, images[frm.TabIndex].Source, test, frm.TabIndex, katID, false));
-                    }                    
+                        await Navigation.PushAsync(new UpdatingPage(tooted[frm.TabIndex].Toote, images[frm.TabIndex].Source, test, tooted[frm.TabIndex].TooteID, katID, false));                                        
                 }                                   
                 lastTapTime = DateTime.Now;
             }
@@ -256,4 +254,5 @@ namespace MyGrum.Views
 /*
  * Переделать страницу в общий класс
  * Чтобы товар добавился в список необходимо посмотреть список
+ * Одновременно в список можно добавить только 1 товар
  */

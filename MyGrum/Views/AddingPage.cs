@@ -115,7 +115,7 @@ namespace MyGrum.Views
                 else if (isPageRecipesPageOrGroceryPage && !isPageInModeClassOrSubclass)
                 {
                     fileNumber = 3;
-                    textToFile += "," + classID.ToString() + "," + "...";
+                    textToFile += "," + classID.ToString() + "," + "...,..."; 
                 }
                 else if(!isPageRecipesPageOrGroceryPage && !isPageInModeClassOrSubclass)
                 {
@@ -132,6 +132,16 @@ namespace MyGrum.Views
                 test.Add(textToFile);
                 string[] newlines = test.ToArray();
 
+
+                string testqa = ""; //Проверка
+                foreach (var item in newlines)
+                {
+                    testqa += "\n" + item;
+                }
+                await DisplayAlert("Ошибка", testqa, "Ок");
+
+
+
                 if (File.Exists(Path.Combine(folderPath, fileNames[fileNumber])))
                     File.WriteAllLines(Path.Combine(folderPath, fileNames[fileNumber]), newlines);
 
@@ -140,6 +150,3 @@ namespace MyGrum.Views
         }
     }
 }
-/*
- * Для развития проекта можно добавить обзор файлов не в проводнике, а в галереии
- */

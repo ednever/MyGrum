@@ -47,23 +47,29 @@ namespace MyGrum.Views
             {
                 if (grid.Children.Last() == frm)
                 {
-                    await Navigation.PushAsync(new AddingPage(isPageInModeSoogiajad, frm.TabIndex, frm.TabIndex + 1, true));
+                    if (frm.TabIndex == 0)
+                        await Navigation.PushAsync(new AddingPage(isPageInModeSoogiajad, 0, 0, true));
+                    else
+                        await Navigation.PushAsync(new AddingPage(isPageInModeSoogiajad, soogiajad[frm.TabIndex - 1].SoogiaegID, 0, true));
                 }
                 else
                 {
                     soogiaegID = frm.TabIndex;
-                    await Navigation.PushAsync(new RecipesPage(images[frm.TabIndex].AutomationId, false, frm.TabIndex + 1));
+                    await Navigation.PushAsync(new RecipesPage(images[frm.TabIndex].AutomationId, false, soogiajad[frm.TabIndex].SoogiaegID));
                 }
             }
             else
             {
                 if (grid.Children.Last() == frm)
                 {
-                    await Navigation.PushAsync(new AddingPage(isPageInModeSoogiajad, frm.TabIndex, soogiaegID, true));
+                    if (frm.TabIndex == 0)
+                        await Navigation.PushAsync(new AddingPage(isPageInModeSoogiajad, 0, soogiaegID, true));                    
+                    else
+                        await Navigation.PushAsync(new AddingPage(isPageInModeSoogiajad, retseptid[frm.TabIndex - 1].RetseptID, soogiaegID, true));
                 }
                 else
                 {
-                    await Navigation.PushAsync(new RecipeDescriptionPage(images[frm.TabIndex].AutomationId, images[frm.TabIndex].Source));
+                    await Navigation.PushAsync(new RecipeDescriptionPage(retseptid[frm.TabIndex].RetseptID, retseptid[frm.TabIndex].Retsept, images[frm.TabIndex].Source, retseptid[frm.TabIndex].Nimekiri, retseptid[frm.TabIndex].Kirjeldus));
                 }
             }
         }
@@ -73,15 +79,13 @@ namespace MyGrum.Views
             //File.Delete(Path.Combine(folderPath, fileNames[0]));
             //File.Delete(Path.Combine(folderPath, fileNames[1]));
 
-            if (File.Exists(Path.Combine(folderPath, fileNames[0])) == false)
-            {
+            if (!File.Exists(Path.Combine(folderPath, fileNames[0])))
                 File.WriteAllText(Path.Combine(folderPath, fileNames[0]), "1,Завтрак,breakfast.jpg"); //Приём пищи
-            }
+            
 
-            if (File.Exists(Path.Combine(folderPath, fileNames[1])) == false)
-            {
-                File.WriteAllText(Path.Combine(folderPath, fileNames[1]), "1,Овсянка,oatmeal.jpg,1,Описание..."); //Рецепт
-            }
+            if (!File.Exists(Path.Combine(folderPath, fileNames[1])))
+                File.WriteAllText(Path.Combine(folderPath, fileNames[1]), "1,Овсянка,oatmeal.jpg,1,Овсяные хлопья - 200 г#Изюм - 1 ст. л.#Орехи - 1 ст. л.#Корица - добавить по вкусу#Банан - 1 шт#Мёд - 1 ст. л.#Горячая вода - 100 мл,..."); //Рецепт
+            
 
             if (isPageInModeSoogiajad)
             {
@@ -107,7 +111,7 @@ namespace MyGrum.Views
                     for (int i = 0; i < Andmed.Length; i++)
                     {
                         var columns = Andmed[i].Split(',');
-                        Retseptid retsept = new Retseptid(int.Parse(columns[0]), columns[1], columns[2], int.Parse(columns[3]), columns[4]);
+                        Retseptid retsept = new Retseptid(int.Parse(columns[0]), columns[1], columns[2], int.Parse(columns[3]), columns[4], columns[5]);
                         retseptid.Add(retsept);
                     }
                 }
@@ -168,10 +172,9 @@ namespace MyGrum.Views
                         CornerRadius = 30,
                         HeightRequest = 140,
                         Margin = new Thickness(5,10,5,10),
-                        Content = image
+                        Content = image,
+                        GestureRecognizers = { tap, pinch }
                     };
-                    frame.GestureRecognizers.Add(tap);
-                    frame.GestureRecognizers.Add(pinch);
 
                     grid.Children.Add(frame, column, row);
                 }
@@ -185,7 +188,7 @@ namespace MyGrum.Views
                         retseptidUhesSoogiajas.Add(retsept);
                     }
                 }
-                retseptidUhesSoogiajas.Add(new Retseptid(0, "+", "plus.png", 0, "+"));
+                retseptidUhesSoogiajas.Add(new Retseptid(0, "+", "plus.png", 0, "+", "+"));
 
                 for (int i = 0; i < retseptidUhesSoogiajas.Count; i++)
                 {
@@ -208,10 +211,9 @@ namespace MyGrum.Views
                         CornerRadius = 30,
                         HeightRequest = 140,
                         Margin = new Thickness(5, 10, 5, 10),
-                        Content = image
+                        Content = image,
+                        GestureRecognizers = { tap, pinch }
                     };
-                    frame.GestureRecognizers.Add(tap);
-                    frame.GestureRecognizers.Add(pinch);
 
                     grid.Children.Add(frame, column, row);
                 }
@@ -232,13 +234,9 @@ namespace MyGrum.Views
                 if (DateTime.Now - lastTapTime < TimeSpan.FromMilliseconds(DoubleTapMilliseconds))
                 {
                     if (isPageInModeSoogiajad)
-                    {
-                        await Navigation.PushAsync(new UpdatingPage(images[frm.TabIndex].AutomationId, images[frm.TabIndex].Source, isPageInModeSoogiajad, frm.TabIndex, frm.TabIndex + 1, true));
-                    }
+                        await Navigation.PushAsync(new UpdatingPage(soogiajad[frm.TabIndex].Soogiaeg, images[frm.TabIndex].Source, isPageInModeSoogiajad, soogiajad[frm.TabIndex].SoogiaegID, 0, true));                   
                     else
-                    {
-                        await Navigation.PushAsync(new UpdatingPage(images[frm.TabIndex].AutomationId, images[frm.TabIndex].Source, isPageInModeSoogiajad, frm.TabIndex, soogiaegID, true));
-                    }
+                        await Navigation.PushAsync(new UpdatingPage(retseptid[frm.TabIndex].Retsept, images[frm.TabIndex].Source, isPageInModeSoogiajad, retseptid[frm.TabIndex].RetseptID, soogiaegID, true));                   
                 }
                 lastTapTime = DateTime.Now;
             }
@@ -247,5 +245,4 @@ namespace MyGrum.Views
 }
 /*
  * У картинки должна быть чёрная немного прозрачная линия с названием картинки
- * Переход на страницу с описанием рецепта
  */
