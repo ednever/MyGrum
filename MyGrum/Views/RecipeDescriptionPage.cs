@@ -38,6 +38,7 @@ namespace MyGrum.Views
             {
                 Label pealkiriLabel = new Label
                 {
+                    TextColor = Color.Black,
                     Text = texts[i],
                     FontSize = 25,
                     FontAttributes = FontAttributes.Bold,
@@ -45,13 +46,14 @@ namespace MyGrum.Views
                 };
                 Label sisuLabel = new Label 
                 {
+                    TextColor = Color.Black,
                     Margin = new Thickness(0, 20, 0, 20),
                     FontSize = 16,
                     GestureRecognizers = { tap }
                 };
                 labels.Add(sisuLabel);
 
-                AutoResizingEditor editor = new AutoResizingEditor { IsVisible = false };
+                AutoResizingEditor editor = new AutoResizingEditor { IsVisible = false, TextColor = Color.Black };
                 editors.Add(editor);
 
                 Button button = new Button { Text = "Сохранить", Margin = new Thickness(0, 0, 20, 20), IsVisible = false };               

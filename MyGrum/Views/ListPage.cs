@@ -17,21 +17,28 @@ namespace MyGrum.Views
         StackLayout st;
         public ListPage()
         {
+
             Title = "Список";
 
             st = new StackLayout { Margin = new Thickness(20, 20, 0, 0) };
-            StackLayout st1 = new StackLayout { 
-                Children = { new Button { Text = "Очистить список", Margin = new Thickness(0,0,20,20) } },
-                HorizontalOptions = LayoutOptions.End
-            };
+            Button button = new Button { Text = "Очистить список", Margin = new Thickness(0, 0, 20, 20) };
+            button.Clicked += Button_Clicked;
+            StackLayout st1 = new StackLayout { Children = { button }, HorizontalOptions = LayoutOptions.End };
             StackLayout st2 = new StackLayout { Children = { st, st1 } };
             ScrollView scrollView = new ScrollView { Content = st2 };
             Content = scrollView;
         }
+
+        void Button_Clicked(object sender, EventArgs e)
+        {
+            Preferences.Clear();
+            st.Children.Clear();
+        }
+
         protected override void OnAppearing()
         {
             base.OnAppearing();
-
+            st.Children.Clear();
 
             if (String.IsNullOrEmpty(fileNames[1])) return;
             if (fileNames[1] != null)
@@ -45,21 +52,19 @@ namespace MyGrum.Views
                 }
             }
 
-            for (int i = 0; i < tooted.Count; i++)
+            for (int i = 1; i < tooted.Count + 1; i++)
             {
                 if (Preferences.ContainsKey(i.ToString()))
                 {
                     StackLayout st1 = new StackLayout 
-                    { 
-                        Children = { new CheckBox(), new Label { Text = Preferences.Get(i.ToString(), "Pole andmed"), Margin = new Thickness(0,5,0,0) } }, 
+                    {
+                        Children = { new CheckBox(), new Label { TextColor = Color.Black, Text = Preferences.Get(i.ToString(), "Нет данных"), Margin = new Thickness(0,5,0,0) } }, 
                         Orientation = StackOrientation.Horizontal 
                     };
                     st.Children.Add(st1);
-
-                    //label.Text += "\n" + Preferences.Get(i.ToString(), "Pole andmed");
-                    Preferences.Clear();
                 }
             }
+            
         }
     }  
 }

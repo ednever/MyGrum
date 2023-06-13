@@ -55,7 +55,7 @@ namespace MyGrum.Views
                 else
                 {
                     katID = frm.TabIndex;
-                    await Navigation.PushAsync(new GroceryPage(images[frm.TabIndex].AutomationId, false, kategooriad[frm.TabIndex].KategooriaID));
+                    await Navigation.PushAsync(new GroceryPage(kategooriad[frm.TabIndex].Kategooria, false, kategooriad[frm.TabIndex].KategooriaID));
                 }              
             }
             else
@@ -72,12 +72,12 @@ namespace MyGrum.Views
                     if (frm.Opacity == 1)
                     {
                         frm.Opacity = 0.5;
-                        Preferences.Set(frm.TabIndex.ToString(), images[frm.TabIndex].AutomationId);
+                        Preferences.Set(tootedUheKategooriaga[frm.TabIndex].TooteID.ToString(), tootedUheKategooriaga[frm.TabIndex].Toote);
                     }
                     else
                     {
                         frm.Opacity = 1;
-                        Preferences.Remove(frm.TabIndex.ToString());
+                        Preferences.Remove(tootedUheKategooriaga[frm.TabIndex].TooteID.ToString());
                     }
                 }
             }           
@@ -241,9 +241,9 @@ namespace MyGrum.Views
                 if (DateTime.Now - lastTapTime < TimeSpan.FromMilliseconds(DoubleTapMilliseconds))
                 {
                     if (test)
-                        await Navigation.PushAsync(new UpdatingPage(kategooriad[frm.TabIndex].Kategooria, images[frm.TabIndex].Source, test, kategooriad[frm.TabIndex].KategooriaID, 0, false));                    
+                        await Navigation.PushAsync(new UpdatingPage(kategooriad[frm.TabIndex].Kategooria, images[frm.TabIndex].Source, test, kategooriad[frm.TabIndex].KategooriaID, 0, false, null, null));                    
                     else
-                        await Navigation.PushAsync(new UpdatingPage(tooted[frm.TabIndex].Toote, images[frm.TabIndex].Source, test, tooted[frm.TabIndex].TooteID, katID, false));                                        
+                        await Navigation.PushAsync(new UpdatingPage(tootedUheKategooriaga[frm.TabIndex].Toote, images[frm.TabIndex].Source, test, tootedUheKategooriaga[frm.TabIndex].TooteID, katID, false, null, null));                                        
                 }                                   
                 lastTapTime = DateTime.Now;
             }
@@ -253,6 +253,5 @@ namespace MyGrum.Views
 
 /*
  * Переделать страницу в общий класс
- * Чтобы товар добавился в список необходимо посмотреть список
- * Одновременно в список можно добавить только 1 товар
+ * Одновременно в список можно добавить только товары с одной категории если посмотреть в список
  */

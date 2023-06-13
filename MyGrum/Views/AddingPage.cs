@@ -56,8 +56,22 @@ namespace MyGrum.Views
             };
             frame.GestureRecognizers.Add(tap);
         
-            Label label = new Label { Text = "Название", FontSize = 25, FontAttributes = FontAttributes.Bold, Margin = new Thickness(20, 20, 0, 0) };
-            entry = new Entry { Placeholder = "Введите текст", Margin = new Thickness(20, 0, 20, 0), MaxLength = 20 };
+            Label label = new Label 
+            {
+                TextColor = Color.Black,
+                Text = "Название", 
+                FontSize = 25, 
+                FontAttributes = FontAttributes.Bold, 
+                Margin = new Thickness(20, 20, 0, 0) 
+            };
+            entry = new Entry 
+            {
+                TextColor = Color.Black,
+                PlaceholderColor = Color.Black,
+                Placeholder = "Введите текст",               
+                Margin = new Thickness(20, 0, 20, 0), 
+                MaxLength = 20 
+            };
             Button button = new Button { Text = "Сохранить", Margin = new Thickness(0,20,20,0) };
             button.Clicked += Button_Clicked;
 
@@ -132,15 +146,12 @@ namespace MyGrum.Views
                 test.Add(textToFile);
                 string[] newlines = test.ToArray();
 
-
-                string testqa = ""; //Проверка
+                string proverka = ""; //test
                 foreach (var item in newlines)
                 {
-                    testqa += "\n" + item;
+                    proverka += "\n" + item.ToString();
                 }
-                await DisplayAlert("Ошибка", testqa, "Ок");
-
-
+                await DisplayAlert("TEST",proverka,"OK");
 
                 if (File.Exists(Path.Combine(folderPath, fileNames[fileNumber])))
                     File.WriteAllLines(Path.Combine(folderPath, fileNames[fileNumber]), newlines);

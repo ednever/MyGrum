@@ -234,9 +234,9 @@ namespace MyGrum.Views
                 if (DateTime.Now - lastTapTime < TimeSpan.FromMilliseconds(DoubleTapMilliseconds))
                 {
                     if (isPageInModeSoogiajad)
-                        await Navigation.PushAsync(new UpdatingPage(soogiajad[frm.TabIndex].Soogiaeg, images[frm.TabIndex].Source, isPageInModeSoogiajad, soogiajad[frm.TabIndex].SoogiaegID, 0, true));                   
+                        await Navigation.PushAsync(new UpdatingPage(soogiajad[frm.TabIndex].Soogiaeg, images[frm.TabIndex].Source, isPageInModeSoogiajad, soogiajad[frm.TabIndex].SoogiaegID, 0, true, null, null));                   
                     else
-                        await Navigation.PushAsync(new UpdatingPage(retseptid[frm.TabIndex].Retsept, images[frm.TabIndex].Source, isPageInModeSoogiajad, retseptid[frm.TabIndex].RetseptID, soogiaegID, true));                   
+                        await Navigation.PushAsync(new UpdatingPage(retseptidUhesSoogiajas[frm.TabIndex].Retsept, images[frm.TabIndex].Source, isPageInModeSoogiajad, retseptidUhesSoogiajas[frm.TabIndex].RetseptID, soogiaegID, true, retseptidUhesSoogiajas[frm.TabIndex].Nimekiri, retseptidUhesSoogiajas[frm.TabIndex].Kirjeldus));                   
                 }
                 lastTapTime = DateTime.Now;
             }

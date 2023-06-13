@@ -17,13 +17,16 @@ namespace MyGrum.Views
         Entry entry;
         bool isPageInModeClassOrSubclass, isPageRecipesPageOrGroceryPage;
         int num, classID;
+        string nimekiri, kirjeldus;
 
-        public UpdatingPage(string pealkiri, ImageSource imageSource, bool isPageInModeClassOrSubclass, int num, int classID, bool isPageRecipesPageOrGroceryPage)
+        public UpdatingPage(string pealkiri, ImageSource imageSource, bool isPageInModeClassOrSubclass, int num, int classID, bool isPageRecipesPageOrGroceryPage, string nimekiri, string kirjeldus)
         {
             this.isPageInModeClassOrSubclass = isPageInModeClassOrSubclass;
             this.num = num;
             this.classID = classID;
             this.isPageRecipesPageOrGroceryPage = isPageRecipesPageOrGroceryPage;
+            this.nimekiri = nimekiri;
+            this.kirjeldus = kirjeldus;
 
             Title = pealkiri;
 
@@ -44,7 +47,8 @@ namespace MyGrum.Views
             frame.GestureRecognizers.Add(tap);
 
             Label label = new Label 
-            { 
+            {
+                TextColor = Color.Black,
                 Text = "Название", 
                 FontSize = 25, 
                 FontAttributes = FontAttributes.Bold, 
@@ -52,8 +56,10 @@ namespace MyGrum.Views
             };
             entry = new Entry 
             { 
+                PlaceholderColor = Color.Black,
                 Placeholder = "Введите текст", 
                 Text = pealkiri, 
+                TextColor = Color.Black,
                 Margin = new Thickness(20, 0, 20, 0), 
                 MaxLength = 20 
             };
@@ -193,12 +199,12 @@ namespace MyGrum.Views
                     }
                     string[] newlines = abiLinesList.ToArray();
 
-                    string testqa = ""; //Проверка
+                    string proverka = ""; //TEST
                     foreach (var item in newlines)
                     {
-                        testqa += "\n" + item;
+                        proverka += "\n" + item.ToString();
                     }
-                    await DisplayAlert("Ошибка", testqa, "Ок");
+                    await DisplayAlert("TEST", proverka, "OK");
 
                     File.WriteAllLines(Path.Combine(folderPath, fileNames[fileNumber]), newlines);
                     await Navigation.PopAsync();
@@ -222,7 +228,7 @@ namespace MyGrum.Views
                     else if (isPageRecipesPageOrGroceryPage && !isPageInModeClassOrSubclass)
                     {
                         fileNumber = 3;
-                        textToFile += "," + classID.ToString() + "," + "...,..."; //подумать можно
+                        textToFile += "," + classID.ToString() + "," + nimekiri + "," + kirjeldus;
                     }
                     else if (!isPageRecipesPageOrGroceryPage && !isPageInModeClassOrSubclass)
                     {
@@ -247,12 +253,12 @@ namespace MyGrum.Views
                         lines[num - 1] = textToFile;
                     }
 
-                    string testqa = ""; //Проверка
+                    string proverka = ""; //test
                     foreach (var item in lines)
                     {
-                        testqa += "\n" + item;
+                        proverka += "\n" + item.ToString();
                     }
-                    await DisplayAlert("Ошибка", testqa, "Ок");
+                    await DisplayAlert("TEST", proverka, "OK");
 
                     if (File.Exists(Path.Combine(folderPath, fileNames[fileNumber])))
                         File.WriteAllLines(Path.Combine(folderPath, fileNames[fileNumber]), lines);
@@ -263,6 +269,3 @@ namespace MyGrum.Views
         }
     }
 }
-/*
- * Обновлять рецепт с его описанием
- */
