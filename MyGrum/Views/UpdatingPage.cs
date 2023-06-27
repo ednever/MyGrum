@@ -199,12 +199,12 @@ namespace MyGrum.Views
                     }
                     string[] newlines = abiLinesList.ToArray();
 
-                    string proverka = ""; //TEST
-                    foreach (var item in newlines)
-                    {
-                        proverka += "\n" + item.ToString();
-                    }
-                    await DisplayAlert("TEST", proverka, "OK");
+                    //string proverka = ""; //TEST
+                    //foreach (var item in newlines)
+                    //{
+                    //    proverka += "\n" + item.ToString();
+                    //}
+                    //await DisplayAlert("TEST", proverka, "OK");
 
                     File.WriteAllLines(Path.Combine(folderPath, fileNames[fileNumber]), newlines);
                     await Navigation.PopAsync();
@@ -253,12 +253,12 @@ namespace MyGrum.Views
                         lines[num - 1] = textToFile;
                     }
 
-                    string proverka = ""; //test
-                    foreach (var item in lines)
-                    {
-                        proverka += "\n" + item.ToString();
-                    }
-                    await DisplayAlert("TEST", proverka, "OK");
+                    //string proverka = ""; //test
+                    //foreach (var item in lines)
+                    //{
+                    //    proverka += "\n" + item.ToString();
+                    //}
+                    //await DisplayAlert("TEST", proverka, "OK");
 
                     if (File.Exists(Path.Combine(folderPath, fileNames[fileNumber])))
                         File.WriteAllLines(Path.Combine(folderPath, fileNames[fileNumber]), lines);

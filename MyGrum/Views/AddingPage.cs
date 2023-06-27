@@ -39,7 +39,7 @@ namespace MyGrum.Views
                 if (isPageInModeClassOrSubclass)
                     Title = "Добавление категории";
                 else
-                    Title = "Добавление товара";
+                    Title = num.ToString();//"Добавление товара";
             }
 
 
@@ -146,12 +146,12 @@ namespace MyGrum.Views
                 test.Add(textToFile);
                 string[] newlines = test.ToArray();
 
-                string proverka = ""; //test
-                foreach (var item in newlines)
-                {
-                    proverka += "\n" + item.ToString();
-                }
-                await DisplayAlert("TEST",proverka,"OK");
+                //string proverka = ""; //test
+                //foreach (var item in newlines)
+                //{
+                //    proverka += "\n" + item.ToString();
+                //}
+                //await DisplayAlert("TEST",proverka,"OK");
 
                 if (File.Exists(Path.Combine(folderPath, fileNames[fileNumber])))
                     File.WriteAllLines(Path.Combine(folderPath, fileNames[fileNumber]), newlines);

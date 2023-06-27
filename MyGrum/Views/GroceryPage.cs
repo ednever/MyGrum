@@ -62,10 +62,10 @@ namespace MyGrum.Views
             {
                 if (grid.Children.Last() == frm)
                 {
-                    if (frm.TabIndex == 0)
-                        await Navigation.PushAsync(new AddingPage(test, 0, katID, false));
-                    else
-                        await Navigation.PushAsync(new AddingPage(test, tooted[frm.TabIndex - 1].TooteID, katID, false));
+                    string[] lines = File.ReadAllLines(Path.Combine(folderPath, fileNames[1]));
+                    string lastchar = lines.Last().Substring(0, 1);
+
+                    await Navigation.PushAsync(new AddingPage(test, int.Parse(lastchar), katID, false));
                 }
                 else
                 {
@@ -253,5 +253,4 @@ namespace MyGrum.Views
 
 /*
  * Переделать страницу в общий класс
- * Одновременно в список можно добавить только товары с одной категории если посмотреть в список
  */
