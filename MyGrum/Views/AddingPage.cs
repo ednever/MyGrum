@@ -39,7 +39,7 @@ namespace MyGrum.Views
                 if (isPageInModeClassOrSubclass)
                     Title = "Добавление категории";
                 else
-                    Title = num.ToString();//"Добавление товара";
+                    Title = "Добавление товара";
             }
 
 
